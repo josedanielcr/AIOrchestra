@@ -10,10 +10,11 @@ namespace ApiGateway.Configuration
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
+            })
+            .AddJwtBearer(options =>
             {
-                options.Authority = "https://dev-qcwyqko8w0p3q5ht.us.auth0.com/";
-                options.Audience = "https://localhost:8083";
+                options.Authority = $"https://{configuration["Auth0:Authority"]}";
+                options.Audience = configuration["Auth0:Audience"];
             });
             return services;
         }
