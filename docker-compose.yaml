@@ -118,19 +118,23 @@ services:
       - ai-orchestra-network
 
   api-gateway:
-    build:
-      context: ./ApiGateway
-      dockerfile: Dockerfile
-    image: ai-orchestra/api-gateway:latest
-    container_name: api-gateway
-    ports:
-      - "8082:8082"
-      - "8083:8083"
-    environment:
-      ASPNETCORE_HTTPS_PORT: "https://+:8083"
-      ASPNETCORE_URLS: "http://+:8082"
-    networks:
-      - ai-orchestra-network
+      build:
+        context: ./ApiGateway
+      image: ai-orchestra/api-gateway:latest
+      container_name: api-gateway
+      ports:
+        - "8082:8082"
+        - "8083:8083"
+      volumes:
+        - ./certificates/aspnetapp.pfx:/app/certificates/aspnetapp.pfx
+      environment:
+        ASPNETCORE_HTTPS_PORT: "https://+:8083"
+        ASPNETCORE_URLS: "https://+:8083;http://+:8082"
+        KAFKA_BROKERS: "kafka-broker-1:9092,kafka-broker-2:9092,kafka-broker-3:9092"
+        ASPNETCORE_Kestrel__Certificates__Default__Path: "/app/certificates/aspnetapp.pfx"
+        ASPNETCORE_Kestrel__Certificates__Default__Password: "AIOrchestra123"
+      networks:
+        - ai-orchestra-network
 
 networks:
   ai-orchestra-network:

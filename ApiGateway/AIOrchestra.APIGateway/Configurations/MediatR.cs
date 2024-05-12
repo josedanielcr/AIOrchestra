@@ -1,8 +1,8 @@
-﻿namespace ApiGateway.Configuration
+﻿namespace AIOrchestra.APIGateway.Configurations
 {
     public static class MediatR
     {
-        public static IServiceCollection AddApplicationMediatR(this IServiceCollection services)
+        public static IServiceCollection AddMediatR(this IServiceCollection services)
         {
             services.AddMediatR(config =>
             {
@@ -11,5 +11,6 @@
 
             return services;
         }
+
     }
 }

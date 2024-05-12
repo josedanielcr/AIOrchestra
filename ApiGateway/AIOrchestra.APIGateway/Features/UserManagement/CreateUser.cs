@@ -1,15 +1,14 @@
-﻿using ApiGateway.Common;
-using ApiGateway.Contracts.UserManagement.Requests;
-using ApiGateway.Features.UserManagement;
+﻿using AIOrchestra.APIGateway.Common;
+using AIOrchestra.APIGateway.Contracts.UserManagement.Requests;
+using AIOrchestra.APIGateway.Features.UserManagement;
 using Carter;
 using Mapster;
 using MediatR;
 
-namespace ApiGateway.Features.UserManagement
+namespace AIOrchestra.APIGateway.Features.UserManagement
 {
     public static class CreateUser
     {
-
         public class Command : IRequest<BaseResponse>
         {
             public required string Name { get; set; }
@@ -24,15 +23,16 @@ namespace ApiGateway.Features.UserManagement
                 return new BaseResponse();
             }
         }
+
     }
 }
 
-// Path: ApiGateway/Features/UserManagement/UpdateUser.cs
+// Path: AIOrchestra.APIGateway/Features/UserManagement/CreateUserEndpoint.cs
 public class CreateUserEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
-    {   
-        app.MapPost("/api/user", async (CreateUserReq request, ISender sender) =>
+    {
+        app.MapPost("api/user", async (CreateUserReq request, ISender sender) =>
         {
             var command = request.Adapt<CreateUser.Command>();
             var result = await sender.Send(command);

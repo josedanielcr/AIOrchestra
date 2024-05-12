@@ -1,6 +1,6 @@
-﻿namespace ApiGateway.Common
+﻿namespace AIOrchestra.APIGateway.Common
 {
-    public class BaseResponse : BaseContract 
+    public class BaseResponse : BaseContract
     {
         public bool IsSuccess { get; set; } = true;
         public bool IsFailure { get; set; } = false;

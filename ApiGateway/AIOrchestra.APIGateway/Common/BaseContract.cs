@@ -1,4 +1,4 @@
-﻿namespace ApiGateway.Common
+﻿namespace AIOrchestra.APIGateway.Common
 {
     public class BaseContract
     {
