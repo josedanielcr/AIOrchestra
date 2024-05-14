@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using AIOrchestra.APIGateway.Configurations.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
-namespace AIOrchestra.APIGateway.Configurations
+namespace AIOrchestra.APIGateway.Configurations.Authentication
 {
     public static class Authentication
     {

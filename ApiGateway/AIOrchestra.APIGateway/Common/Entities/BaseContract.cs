@@ -2,7 +2,7 @@
 {
     public class BaseContract
     {
-        public Guid OperationId { get; set; } = new Guid();
+        public string OperationId { get; set; } = Guid.NewGuid().ToString();
         public string ApiVersion { get; set; } = string.Empty;
     }
 }

@@ -2,6 +2,7 @@
 using AIOrchestra.APIGateway.Common.Enums;
 using AIOrchestra.APIGateway.Contracts.UserManagement.Requests;
 using AIOrchestra.APIGateway.Features.UserManagement;
+using AIOrchestra.APIGateway.Kafka.Producers;
 using AIOrchestra.APIGateway.Resources;
 using Carter;
 using Mapster;
@@ -20,6 +21,13 @@ namespace AIOrchestra.APIGateway.Features.UserManagement
 
         internal sealed class Handler : IRequestHandler<Command, BaseResponse>
         {
+            private readonly IProducerService producer;
+
+            public Handler(IProducerService producer)
+            {
+                this.producer = producer;
+            }
+
             public async Task<BaseResponse> Handle(Command request, CancellationToken cancellationToken)
             {
                 // Add your logic here
@@ -45,7 +53,7 @@ public class CreateUserEndpoint : ICarterModule
 
             if (result.IsFailure)
             {
-                return Results.BadRequest(result.Message);
+                return Results.BadRequest(result);
             }
             return Results.Ok(result);
         }).RequireAuthorization();

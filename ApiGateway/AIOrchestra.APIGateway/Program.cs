@@ -1,4 +1,6 @@
 using AIOrchestra.APIGateway.Configurations;
+using AIOrchestra.APIGateway.Configurations.Authentication;
+using AIOrchestra.APIGateway.Configurations.Kafka;
 using Carter;
 using FluentValidation;
 
@@ -11,6 +13,7 @@ builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 builder.Services.AddCarter();
 builder.Services.AddAuthentication(builder.Configuration);
 builder.Services.AddAuthorization();
+builder.Services.AddKafkaProducer(builder.Configuration);
 
 var app = builder.Build();
 

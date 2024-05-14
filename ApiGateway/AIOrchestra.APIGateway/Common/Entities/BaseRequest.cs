@@ -1,9 +1,13 @@
-﻿namespace AIOrchestra.APIGateway.Common.Entities
+﻿using AIOrchestra.APIGateway.Common.Enums;
+
+namespace AIOrchestra.APIGateway.Common.Entities
 {
     public class BaseRequest : BaseContract
     {
         public DateTime Timestamp { get; set; } = DateTime.UtcNow;
         public string RequesterId { get; set; } = string.Empty;
-        public int TimeoutInSeconds { get; set; } = 30;
+        public string CorrelationId { get; set; } = Guid.NewGuid().ToString();
+        public Dictionary<string, string> Headers { get; set; } = new Dictionary<string, string>();
+        public Topics TargetTopic { get; set; }
     }
 }

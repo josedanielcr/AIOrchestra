@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace AIOrchestra.APIGateway.Configurations
+namespace AIOrchestra.APIGateway.Configurations.Authentication
 {
     public class HasScopeHandler : AuthorizationHandler<HasScopeRequirement>
     {
