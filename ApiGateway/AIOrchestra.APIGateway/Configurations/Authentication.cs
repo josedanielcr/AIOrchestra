@@ -21,18 +21,8 @@ namespace AIOrchestra.APIGateway.Configurations
                 };
             });
 
-            services.AddAuthorization(options =>
-              {
-                  options.AddPolicy(
-                    "create:user",
-                    policy => policy.Requirements.Add(
-                      new HasScopeRequirement("create:user", domain)
-                    )
-                  );
-              });
-
+            services.AddAuthorization();
             services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
-
             return services;
         }
     }

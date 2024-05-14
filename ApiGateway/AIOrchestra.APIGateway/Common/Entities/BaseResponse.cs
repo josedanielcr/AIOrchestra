@@ -1,4 +1,4 @@
-﻿namespace AIOrchestra.APIGateway.Common
+﻿namespace AIOrchestra.APIGateway.Common.Entities
 {
     public class BaseResponse : BaseContract
     {

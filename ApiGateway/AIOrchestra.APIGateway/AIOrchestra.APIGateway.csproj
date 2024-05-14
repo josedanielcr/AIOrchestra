@@ -18,6 +18,25 @@
 
   <ItemGroup>
     <Folder Include="Contracts\UserManagement\Responses\" />
+    <Folder Include="Kafka\Consumers\" />
+    <Folder Include="Kafka\Configurations\" />
+    <Folder Include="Kafka\Common\" />
+    <Folder Include="Kafka\Producers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\ServiceEndpoints.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ServiceEndpoints.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\ServiceEndpoints.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ServiceEndpoints.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

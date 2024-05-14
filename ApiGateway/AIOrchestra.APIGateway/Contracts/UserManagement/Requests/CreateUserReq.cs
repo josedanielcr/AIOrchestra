@@ -1,4 +1,5 @@
-﻿using AIOrchestra.APIGateway.Common;
+﻿using AIOrchestra.APIGateway.Common.Entities;
+using AIOrchestra.APIGateway.Common.Enums;
 
 namespace AIOrchestra.APIGateway.Contracts.UserManagement.Requests
 {
@@ -6,5 +7,6 @@ namespace AIOrchestra.APIGateway.Contracts.UserManagement.Requests
     {
         public required string Email { get; set; }
         public required string Name { get; set; }
+        public Topics TargetTopic { get; set; }
     }
 }
