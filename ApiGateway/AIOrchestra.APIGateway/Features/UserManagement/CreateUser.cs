@@ -12,11 +12,10 @@ namespace AIOrchestra.APIGateway.Features.UserManagement
 {
     public static class CreateUser
     {
-        public class Command : IRequest<BaseResponse>
+        public class Command : BaseRequest, IRequest<BaseResponse>
         {
             public required string Name { get; set; }
             public required string Email { get; set; }
-            public Topics TargetTopic { get; set; }
         }
 
         internal sealed class Handler : IRequestHandler<Command, BaseResponse>
@@ -30,8 +29,8 @@ namespace AIOrchestra.APIGateway.Features.UserManagement
 
             public async Task<BaseResponse> Handle(Command request, CancellationToken cancellationToken)
             {
-                // Add your logic here
-                return new BaseResponse();
+                BaseResponse response = await producer.ProduceAsync(request.TargetTopic, request.OperationId, request);
+                return response;
             }
         }
 

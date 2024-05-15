@@ -1,4 +1,6 @@
-﻿namespace AIOrchestra.APIGateway.Configurations
+﻿using AIOrchestra.APIGateway.Configurations.Packages;
+
+namespace AIOrchestra.APIGateway.Configurations.Packages
 {
     public static class MediatR
     {

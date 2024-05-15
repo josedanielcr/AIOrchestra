@@ -19,7 +19,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Configurations\Packages\" />
 		<Folder Include="Contracts\UserManagement\Responses\" />
 		<Folder Include="Kafka\Consumers\" />
 		<Folder Include="Kafka\Helpers\" />

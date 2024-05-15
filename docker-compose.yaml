@@ -61,9 +61,9 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181
-      KAFKA_ADVERTISED_LISTENERS: HOST://localhost:9092,INTERNAL://broker-1:29092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: HOST:PLAINTEXT,INTERNAL:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-1:29092,EXTERNAL://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_SNAPSHOT_TRUST_EMPTY: true
     networks:
       - ai-orchestra-network
@@ -85,9 +85,9 @@ services:
     environment:
       KAFKA_BROKER_ID: 2
       KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181
-      KAFKA_ADVERTISED_LISTENERS: HOST://localhost:9093,INTERNAL://broker-2:29093
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: HOST:PLAINTEXT,INTERNAL:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-2:29093,EXTERNAL://localhost:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_SNAPSHOT_TRUST_EMPTY: true
     networks:
       - ai-orchestra-network
@@ -110,31 +110,32 @@ services:
     environment:
       KAFKA_BROKER_ID: 3
       KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181
-      KAFKA_ADVERTISED_LISTENERS: HOST://localhost:9094,INTERNAL://broker-3:29094
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: HOST:PLAINTEXT,INTERNAL:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-3:29094,EXTERNAL://localhost:9094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_SNAPSHOT_TRUST_EMPTY: true
     networks:
       - ai-orchestra-network
 
   api-gateway:
-      build:
-        context: ./ApiGateway
-      image: ai-orchestra/api-gateway:latest
-      container_name: api-gateway
-      ports:
-        - "8082:8082"
-        - "8083:8083"
-      volumes:
-        - ./certificates/aspnetapp.pfx:/app/certificates/aspnetapp.pfx
-      environment:
-        ASPNETCORE_HTTPS_PORT: "https://+:8083"
-        ASPNETCORE_URLS: "https://+:8083;http://+:8082"
-        KAFKA_BROKERS: "kafka-broker-1:9092,kafka-broker-2:9092,kafka-broker-3:9092"
-        ASPNETCORE_Kestrel__Certificates__Default__Path: "/app/certificates/aspnetapp.pfx"
-        ASPNETCORE_Kestrel__Certificates__Default__Password: "AIOrchestra123"
-      networks:
-        - ai-orchestra-network
+    build:
+      context: ./ApiGateway
+    image: ai-orchestra/api-gateway:latest
+    container_name: api-gateway
+    ports:
+      - "8082:8082"
+      - "8083:8083"
+    volumes:
+      - ./certificates/aspnetapp.pfx:/app/certificates/aspnetapp.pfx
+    environment:
+      ASPNETCORE_HTTPS_PORT: "https://+:8083"
+      ASPNETCORE_URLS: "https://+:8083;http://+:8082"
+      KAFKA_BROKERS: "broker-1:29092,broker-2:29093,broker-3:29094"
+      ASPNETCORE_Kestrel__Certificates__Default__Path: "/app/certificates/aspnetapp.pfx"
+      ASPNETCORE_Kestrel__Certificates__Default__Password: "AIOrchestra123"
+      RUNNING_IN_DOCKER: "true"
+    networks:
+      - ai-orchestra-network
 
 networks:
   ai-orchestra-network:

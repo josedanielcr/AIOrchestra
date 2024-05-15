@@ -1,11 +1,11 @@
-using AIOrchestra.APIGateway.Configurations;
 using AIOrchestra.APIGateway.Configurations.Authentication;
 using AIOrchestra.APIGateway.Configurations.Kafka;
+using AIOrchestra.APIGateway.Configurations.Packages;
 using Carter;
 using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
-
+ConfigureAppSettings(builder);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR();
@@ -28,3 +28,16 @@ app.MapCarter();
 app.UseAuthentication();
 app.UseAuthorization();
 app.Run();
+
+static void ConfigureAppSettings(WebApplicationBuilder builder)
+{
+    var environment = Environment.GetEnvironmentVariable("RUNNING_IN_DOCKER");
+    if (environment == "true")
+    {
+        builder.Configuration.AddJsonFile("appsettings.Docker.json", optional: true, reloadOnChange: true);
+    }
+    else
+    {
+        builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+    }
+}
