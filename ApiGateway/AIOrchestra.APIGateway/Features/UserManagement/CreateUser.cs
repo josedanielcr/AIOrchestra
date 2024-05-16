@@ -1,11 +1,10 @@
-﻿using AIOrchestra.APIGateway.Common.Entities;
-using AIOrchestra.APIGateway.Common.Enums;
-using AIOrchestra.APIGateway.Contracts.UserManagement.Requests;
+﻿using AIOrchestra.APIGateway.Contracts.UserManagement.Requests;
 using AIOrchestra.APIGateway.Features.UserManagement;
 using AIOrchestra.APIGateway.Helpers;
 using AIOrchestra.APIGateway.Kafka.Producers;
 using AIOrchestra.APIGateway.Resources;
 using Carter;
+using CommonLibrary;
 using FluentValidation;
 using Mapster;
 using MediatR;

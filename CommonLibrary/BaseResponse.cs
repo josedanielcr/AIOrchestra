@@ -1,7 +1,11 @@
-﻿using AIOrchestra.APIGateway.Common.Enums;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace AIOrchestra.APIGateway.Common.Entities
+namespace CommonLibrary
 {
     public class BaseResponse : BaseContract
     {

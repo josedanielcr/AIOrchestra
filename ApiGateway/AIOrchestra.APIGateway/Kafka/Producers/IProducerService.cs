@@ -1,5 +1,5 @@
-﻿using AIOrchestra.APIGateway.Common.Entities;
-using AIOrchestra.APIGateway.Common.Enums;
+﻿
+using CommonLibrary;
 
 namespace AIOrchestra.APIGateway.Kafka.Producers
 {

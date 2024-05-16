@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace AIOrchestra.APIGateway.Common.Enums
+namespace CommonLibrary
 {
     public enum Topics
     {

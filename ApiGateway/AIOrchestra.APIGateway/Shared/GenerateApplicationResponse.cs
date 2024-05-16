@@ -1,5 +1,4 @@
-﻿using AIOrchestra.APIGateway.Common.Entities;
-using AIOrchestra.APIGateway.Common.Enums;
+﻿using CommonLibrary;
 using System.Net;
 
 namespace AIOrchestra.APIGateway.Helpers

@@ -1,6 +1,4 @@
-﻿using AIOrchestra.APIGateway.Common.Entities;
-using AIOrchestra.APIGateway.Resources;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace AIOrchestra.APIGateway.Helpers
 {

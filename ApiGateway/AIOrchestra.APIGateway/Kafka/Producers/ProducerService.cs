@@ -1,6 +1,5 @@
-﻿using AIOrchestra.APIGateway.Common.Entities;
-using AIOrchestra.APIGateway.Common.Enums;
-using AIOrchestra.APIGateway.Helpers;
+﻿using AIOrchestra.APIGateway.Helpers;
+using CommonLibrary;
 using Confluent.Kafka;
 using System.Diagnostics;
 using System.Net;
