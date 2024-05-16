@@ -1,6 +1,8 @@
+using AIOrchestra.APIGateway.Configurations;
 using AIOrchestra.APIGateway.Configurations.Authentication;
 using AIOrchestra.APIGateway.Configurations.Kafka;
 using AIOrchestra.APIGateway.Configurations.Packages;
+using AIOrchestra.APIGateway.Helpers;
 using Carter;
 using FluentValidation;
 
@@ -14,6 +16,7 @@ builder.Services.AddCarter();
 builder.Services.AddAuthentication(builder.Configuration);
 builder.Services.AddAuthorization();
 builder.Services.AddKafkaProducer(builder.Configuration);
+builder.Services.AddApplicationCors();
 
 var app = builder.Build();
 

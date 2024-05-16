@@ -25,6 +25,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Compile Update="Resources\ApplicationErrorCodes.Designer.cs">
+		  <DesignTime>True</DesignTime>
+		  <AutoGen>True</AutoGen>
+		  <DependentUpon>ApplicationErrorCodes.resx</DependentUpon>
+		</Compile>
+		<Compile Update="Resources\ApplicationErrors.Designer.cs">
+		  <DesignTime>True</DesignTime>
+		  <AutoGen>True</AutoGen>
+		  <DependentUpon>ApplicationErrors.resx</DependentUpon>
+		</Compile>
 		<Compile Update="Resources\ServiceEndpoints.Designer.cs">
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
@@ -33,6 +43,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<EmbeddedResource Update="Resources\ApplicationErrorCodes.resx">
+		  <Generator>PublicResXFileCodeGenerator</Generator>
+		  <LastGenOutput>ApplicationErrorCodes.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Resources\ApplicationErrors.resx">
+		  <Generator>PublicResXFileCodeGenerator</Generator>
+		  <LastGenOutput>ApplicationErrors.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
 		<EmbeddedResource Update="Resources\ServiceEndpoints.resx">
 			<Generator>PublicResXFileCodeGenerator</Generator>
 			<LastGenOutput>ServiceEndpoints.Designer.cs</LastGenOutput>
