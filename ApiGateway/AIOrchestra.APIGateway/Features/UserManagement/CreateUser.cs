@@ -1,11 +1,10 @@
 ﻿using AIOrchestra.APIGateway.Contracts.UserManagement.Requests;
 using AIOrchestra.APIGateway.Features.UserManagement;
-using AIOrchestra.APIGateway.Helpers;
-using AIOrchestra.APIGateway.Kafka.Producers;
 using AIOrchestra.APIGateway.Resources;
 using Carter;
 using CommonLibrary;
 using FluentValidation;
+using KafkaLibrary.Interfaces;
 using Mapster;
 using MediatR;
 using System.Net;
@@ -31,10 +30,10 @@ namespace AIOrchestra.APIGateway.Features.UserManagement
 
         internal sealed class Handler : IRequestHandler<Command, BaseResponse>
         {
-            private readonly IProducerService producer;
+            private readonly IProducer producer;
             private readonly IValidator<Command> validator;
 
-            public Handler(IProducerService producer,
+            public Handler(IProducer producer,
                 IValidator<Command> validator)
             {
                 this.producer = producer;
@@ -55,10 +54,10 @@ namespace AIOrchestra.APIGateway.Features.UserManagement
             private (bool hasErorr, BaseResponse? baseResponse) ValidateRequest(Command request)
             {
 
-                var validationResult = Validation.ValidateRequest(validator, request);
+                var validationResult = SharedLibrary.ValidationHelper.ValidateRequest(validator, request);
                 if (!string.IsNullOrEmpty(validationResult))
                 {
-                    return (true, GenerateApplicationResponse.GenerateResponse(
+                    return (true, SharedLibrary.GenerateApplicationResponse.GenerateResponse(
                         request.OperationId,
                         request.ApiVersion,
                         false,

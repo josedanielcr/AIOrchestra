@@ -1,15 +1,14 @@
 ﻿using CommonLibrary;
 using System.Net;
 
-namespace AIOrchestra.APIGateway.Helpers
+namespace SharedLibrary
 {
     public static class GenerateApplicationResponse
     {
-
         public static BaseResponse GenerateResponse(
             string operationId,
             string apiVersion,
-            Boolean isSuccess,
+            System.Boolean isSuccess,
             HttpStatusCode status,
             string? code,
             string? message,
@@ -28,7 +27,7 @@ namespace AIOrchestra.APIGateway.Helpers
                 ProcessingTime = ProcessingTime ?? 0,
                 ServicedBy = ServicedBy ?? Topics.Unknown,
                 AdditionalDetails = AdditionalDetails ?? new Dictionary<string, string>(),
-                Error = new Error
+                Error = new CommonLibrary.Error
                 {
                     Code = code ?? string.Empty,
                     Message = message ?? string.Empty,

@@ -1,17 +1,23 @@
-﻿using AIOrchestra.APIGateway.Helpers;
-using CommonLibrary;
+﻿using CommonLibrary;
 using Confluent.Kafka;
+using KafkaLibrary.Interfaces;
+using SharedLibrary;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace AIOrchestra.APIGateway.Kafka.Producers
+namespace KafkaLibrary.Implementations
 {
-    public class ProducerService : IProducerService
+    public class Producer : IProducer
     {
         private IProducer<string, BaseRequest> producer;
         private Stopwatch stopwatch;
 
-        public ProducerService(ProducerConfig config)
+        public Producer(ProducerConfig config)
         {
             producer = new ProducerBuilder<string, BaseRequest>(config)
                 .SetValueSerializer(new JsonSerializer<BaseRequest>())
@@ -30,7 +36,7 @@ namespace AIOrchestra.APIGateway.Kafka.Producers
             stopwatch.Start();
             try
             {
-                var result = await producer.ProduceAsync(Helpers.EnumHelper.GetDescription(topic),
+                var result = await producer.ProduceAsync(EnumHelper.GetDescription(topic),
                     new Message<string, BaseRequest> { Key = key, Value = message });
 
                 stopwatch.Stop();

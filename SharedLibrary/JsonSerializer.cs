@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using System.Text;
 
-namespace AIOrchestra.APIGateway.Helpers
+namespace SharedLibrary
 {
     public class JsonSerializer<T> : ISerializer<T>, IDeserializer<T>
     {

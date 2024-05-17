@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 
-namespace AIOrchestra.APIGateway.Helpers
+namespace SharedLibrary
 {
-    public static class Validation
+    public static class ValidationHelper
     {
         public static string ValidateRequest<TRequest>(IValidator<TRequest> validator, TRequest request)
         {

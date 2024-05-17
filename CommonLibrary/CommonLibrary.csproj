@@ -5,8 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageId>AIOrchestra.App.$(AssemblyName)</PackageId>
-    <Title>AIOrchestra Common Library</Title>
+    <PackageId>josedanielcr.AIOrchestra.App.$(AssemblyName)</PackageId>
+    <Title>Common Library</Title>
     <Authors>$(AssemblyName).josedanielcr</Authors>
     <Description>Common entities for AIOrchestra project
 </Description>

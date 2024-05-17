@@ -1,6 +1,11 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace AIOrchestra.APIGateway.Helpers
+namespace SharedLibrary
 {
     public static class EnumHelper
     {
