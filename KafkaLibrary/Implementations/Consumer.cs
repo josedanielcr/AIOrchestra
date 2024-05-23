@@ -2,6 +2,7 @@
 using Confluent.Kafka;
 using KafkaLibrary.Interfaces;
 using SharedLibrary;
+using System.Net;
 
 namespace KafkaLibrary.Implementations
 {
@@ -9,6 +10,8 @@ namespace KafkaLibrary.Implementations
     {
         private IConsumer<string, BaseRequest> consumer;
         private bool keepConsuming = true;
+        private readonly string CONSUMER_STOPPED = "CONSUMER_STOPPED";
+        private readonly string CONSUMER_STOPPED_MESSAGE = "Consumer stopped due to an exception";
         public Consumer(ConsumerConfig config)
         {
             consumer = new ConsumerBuilder<string, BaseRequest>(config)
@@ -16,20 +19,33 @@ namespace KafkaLibrary.Implementations
                 .Build();
         }
 
-        public BaseRequest Consume(Topics topic /*send a function somehow to know what to process after getting the response*/)
+        public async Task<BaseResponse> Consume(Topics topic)
         {
             keepConsuming = true;
             consumer.Subscribe(topic.ToString());
+            var consumeResult = consumer.Consume();
             while (keepConsuming)
             {
-                var consumeResult = consumer.Consume();
-                if (consumeResult != null)
-                {
-                    //call the parameter function here
-                }
+                return await ExecuteMessageMethodHandler(consumeResult);
             }
             consumer.Close();
-            return null!;
+            return GenerateApplicationResponse.GenerateResponse(
+                null,
+                null,
+                isSuccess: false,
+                HttpStatusCode.BadRequest,
+                CONSUMER_STOPPED,
+                CONSUMER_STOPPED_MESSAGE,
+                null,
+                null,
+                null,
+                null);
+        }
+
+        private async Task<BaseResponse> ExecuteMessageMethodHandler(ConsumeResult<string, BaseRequest> consumeResult)
+        {
+            var result = await InvokeMethodHelper.InvokeMethod(consumeResult.Message.Value);
+            return result;
         }
 
         public void StopConsuming()

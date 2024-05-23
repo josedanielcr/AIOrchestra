@@ -7,12 +7,13 @@
 		<PackageId>josedanielcr.AIOrchestra.App.$(AssemblyName)</PackageId>
 		<Title>AIOrchestra Kafka Library</Title>
 		<Authors>josedanielcr.$(AssemblyName)</Authors>
+		<Version>1.0.1</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Confluent.Kafka" Version="2.4.0" />
-		<PackageReference Include="josedanielcr.AIOrchestra.App.CommonLibrary" Version="1.0.0" />
-		<PackageReference Include="josedanielcr.AIOrchestra.App.SharedLibrary" Version="1.0.0" />
+		<PackageReference Include="josedanielcr.AIOrchestra.App.CommonLibrary" Version="1.0.2" />
+		<PackageReference Include="josedanielcr.AIOrchestra.App.SharedLibrary" Version="1.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
 	</ItemGroup>

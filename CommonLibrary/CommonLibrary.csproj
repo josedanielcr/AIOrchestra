@@ -1,15 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageId>josedanielcr.AIOrchestra.App.$(AssemblyName)</PackageId>
-    <Title>Common Library</Title>
-    <Authors>$(AssemblyName).josedanielcr</Authors>
-    <Description>Common entities for AIOrchestra project
-</Description>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<PackageId>josedanielcr.AIOrchestra.App.$(AssemblyName)</PackageId>
+		<Title>Common Library</Title>
+		<Authors>$(AssemblyName).josedanielcr</Authors>
+		<Description>
+			Common entities for AIOrchestra project
+		</Description>
+		<Version>1.0.2</Version>
+	</PropertyGroup>
 
 </Project>
