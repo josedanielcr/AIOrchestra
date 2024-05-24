@@ -8,6 +8,12 @@ namespace CommonLibrary
         UserManagement,
 
         [Description("Unkown")]
-        Unknown
+        Unknown,
+
+        [Description("cache")]
+        Cache,
+
+        [Description("gateway")]
+        Gateway,
     }
 }

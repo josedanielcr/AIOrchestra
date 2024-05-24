@@ -10,8 +10,6 @@ namespace KafkaLibrary.Implementations
     {
         private IConsumer<string, BaseRequest> consumer;
         private bool keepConsuming = true;
-        private readonly string CONSUMER_STOPPED = "CONSUMER_STOPPED";
-        private readonly string CONSUMER_STOPPED_MESSAGE = "Consumer stopped due to an exception";
         public Consumer(ConsumerConfig config)
         {
             consumer = new ConsumerBuilder<string, BaseRequest>(config)
@@ -19,33 +17,17 @@ namespace KafkaLibrary.Implementations
                 .Build();
         }
 
-        public async Task<BaseResponse> Consume(Topics topic)
+        public BaseRequest Consume(Topics topic)
         {
             keepConsuming = true;
-            consumer.Subscribe(topic.ToString());
+            consumer.Subscribe(EnumHelper.GetDescription(topic));
             var consumeResult = consumer.Consume();
             while (keepConsuming)
             {
-                return await ExecuteMessageMethodHandler(consumeResult);
+                return consumeResult.Message.Value;
             }
             consumer.Close();
-            return GenerateApplicationResponse.GenerateResponse(
-                null,
-                null,
-                isSuccess: false,
-                HttpStatusCode.BadRequest,
-                CONSUMER_STOPPED,
-                CONSUMER_STOPPED_MESSAGE,
-                null,
-                null,
-                null,
-                null);
-        }
-
-        private async Task<BaseResponse> ExecuteMessageMethodHandler(ConsumeResult<string, BaseRequest> consumeResult)
-        {
-            var result = await InvokeMethodHelper.InvokeMethod(consumeResult.Message.Value);
-            return result;
+            return new BaseRequest { };
         }
 
         public void StopConsuming()

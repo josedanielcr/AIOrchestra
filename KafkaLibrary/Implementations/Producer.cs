@@ -3,12 +3,8 @@ using Confluent.Kafka;
 using KafkaLibrary.Interfaces;
 using SharedLibrary;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KafkaLibrary.Implementations
 {
@@ -40,6 +36,8 @@ namespace KafkaLibrary.Implementations
                     new Message<string, BaseRequest> { Key = key, Value = message });
 
                 stopwatch.Stop();
+
+                CacheOperation(key, message);
 
                 return GenerateApplicationResponse.GenerateResponse(
                     message.OperationId,
@@ -74,6 +72,11 @@ namespace KafkaLibrary.Implementations
                     message.TargetTopic,
                     null);
             }
+        }
+
+        private void CacheOperation(string key, BaseRequest message)
+        {
+            producer.Produce(EnumHelper.GetDescription(Topics.Cache), new Message<string, BaseRequest> { Key = key, Value = message });
         }
     }
 }

@@ -9,7 +9,7 @@ namespace KafkaLibrary.Interfaces
 {
     public interface IConsumer : IDisposable
     {
-        Task<BaseResponse> Consume(Topics topic);
+        BaseRequest Consume(Topics topic);
         void StopConsuming();
     }
 }
