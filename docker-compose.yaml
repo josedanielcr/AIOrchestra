@@ -137,6 +137,26 @@ services:
     networks:
       - ai-orchestra-network
 
+  cache-service:
+    build:
+      context: ./CacheService
+    image: ai-orchestra/cache-service:latest
+    container_name: cache-service
+    ports:
+      - "8084:8084"
+      - "8085:8085"
+    volumes:
+      - ./certificates/aspnetapp.pfx:/app/certificates/aspnetapp.pfx
+    environment:
+      ASPNETCORE_HTTPS_PORT: "https://+:8085"
+      ASPNETCORE_URLS: "https://+:8085;http://+:8084"
+      KAFKA_BROKERS: "broker-1:29092,broker-2:29093,broker-3:29094"
+      ASPNETCORE_Kestrel__Certificates__Default__Path: "/app/certificates/aspnetapp.pfx"
+      ASPNETCORE_Kestrel__Certificates__Default__Password: "AIOrchestra123"
+      RUNNING_IN_DOCKER: "true"
+    networks:
+      - ai-orchestra-network
+
 networks:
   ai-orchestra-network:
     driver: bridge

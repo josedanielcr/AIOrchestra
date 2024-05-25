@@ -8,7 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="josedanielcr.AIOrchestra.App.CommonLibrary" Version="1.0.3" />
-    <PackageReference Include="josedanielcr.AIOrchestra.App.KafkaLibrary" Version="1.0.5" />
+    <PackageReference Include="josedanielcr.AIOrchestra.App.KafkaLibrary" Version="1.0.6" />
+    <PackageReference Include="josedanielcr.AIOrchestra.App.SharedLibrary" Version="1.0.4" />
   </ItemGroup>
 
 </Project>

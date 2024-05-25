@@ -1,6 +1,6 @@
 ﻿using CommonLibrary;
-using KafkaLibrary.Implementations;
 using KafkaLibrary.Interfaces;
+using SharedLibrary;
 
 namespace AIOrchestra.CacheService.Consumers
 {
@@ -29,7 +29,7 @@ namespace AIOrchestra.CacheService.Consumers
             while (!cancellationToken.IsCancellationRequested)
             {
                 var result = consumer.Consume(Topics.Cache);
-                logger.LogInformation($"Consumed message: {result}");
+                InvokeMethodHelper.InvokeMethod(result);
             }
         }
 

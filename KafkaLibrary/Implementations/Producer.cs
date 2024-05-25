@@ -76,6 +76,8 @@ namespace KafkaLibrary.Implementations
 
         private void CacheOperation(string key, BaseRequest message)
         {
+            BaseRequest cacheMessage = message;
+            cacheMessage.HandlerMethod = "Save";
             producer.Produce(EnumHelper.GetDescription(Topics.Cache), new Message<string, BaseRequest> { Key = key, Value = message });
         }
     }
