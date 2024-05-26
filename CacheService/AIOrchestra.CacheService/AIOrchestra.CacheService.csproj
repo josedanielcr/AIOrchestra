@@ -9,7 +9,8 @@
   <ItemGroup>
     <PackageReference Include="josedanielcr.AIOrchestra.App.CommonLibrary" Version="1.0.3" />
     <PackageReference Include="josedanielcr.AIOrchestra.App.KafkaLibrary" Version="1.0.6" />
-    <PackageReference Include="josedanielcr.AIOrchestra.App.SharedLibrary" Version="1.0.4" />
+    <PackageReference Include="josedanielcr.AIOrchestra.App.SharedLibrary" Version="1.0.6" />
+    <PackageReference Include="StackExchange.Redis" Version="2.7.33" />
   </ItemGroup>
 
 </Project>

@@ -117,6 +117,15 @@ services:
     networks:
       - ai-orchestra-network
 
+  redis:
+    image: redis:7.2.5
+    container_name: aiorchestra-redis
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--requirepass", "AIOrchestra123"]
+    networks:
+      - ai-orchestra-network
+
   api-gateway:
     build:
       context: ./ApiGateway

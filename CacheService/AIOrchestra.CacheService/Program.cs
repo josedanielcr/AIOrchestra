@@ -1,21 +1,18 @@
 using AIOrchestra.CacheService.Configuration;
+using AIOrchestra.CacheService.Shared;
 using KafkaLibrary;
-using Microsoft.Extensions.Options;
-using SharedLibrary;
-using SharedLibrary.Configuration;
+using static System.Formats.Asn1.AsnWriter;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigureAppSettings(builder);
-SetMethodMappings(builder);
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Services.AddKafka(builder.Configuration);
 builder.Services.AddConsumers();
+builder.Services.AddRedis(builder.Configuration);
+SetMethodMappings(builder);
 
 var app = builder.Build();
-
-app.MapGet("/", () => "Hello World!");
-
 app.Run();
 
 static void ConfigureAppSettings(WebApplicationBuilder builder)
@@ -33,13 +30,6 @@ static void ConfigureAppSettings(WebApplicationBuilder builder)
 
 static void SetMethodMappings(WebApplicationBuilder builder)
 {
-    var methodMappingConfiguration = new MethodMappingConfiguration();
     var section = builder.Configuration.GetSection("MethodMappings");
-    methodMappingConfiguration.MethodMappings = new Dictionary<string, string>();
-
-    foreach (var child in section.GetChildren())
-    {
-        methodMappingConfiguration.MethodMappings[child.Key] = child.Value;
-    }
-    InvokeMethodHelper.Initialize(methodMappingConfiguration.MethodMappings);
+    section.Bind(MethodMappingConfiguration.MethodMappings);
 }
