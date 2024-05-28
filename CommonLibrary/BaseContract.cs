@@ -10,5 +10,6 @@ namespace CommonLibrary
     {
         public string OperationId { get; set; } = Guid.NewGuid().ToString();
         public string ApiVersion { get; set; } = string.Empty;
+        public object Value { get; set; } = null!;
     }
 }

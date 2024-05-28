@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserManagementService", "UserManagementService\UserManagementService.csproj", "{6F7EC913-E2D0-4A01-B465-2094B08AA251}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIOrchestra.UserManagementService", "AIOrchestra.UserManagementService\AIOrchestra.UserManagementService.csproj", "{AA57A194-25BD-4972-8A69-E11ADEC28BC6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6F7EC913-E2D0-4A01-B465-2094B08AA251}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6F7EC913-E2D0-4A01-B465-2094B08AA251}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6F7EC913-E2D0-4A01-B465-2094B08AA251}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6F7EC913-E2D0-4A01-B465-2094B08AA251}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA57A194-25BD-4972-8A69-E11ADEC28BC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA57A194-25BD-4972-8A69-E11ADEC28BC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA57A194-25BD-4972-8A69-E11ADEC28BC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA57A194-25BD-4972-8A69-E11ADEC28BC6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {A7E3A575-2C6F-475F-80EB-7CF21C0DEF83}
+		SolutionGuid = {884F22C4-159E-4404-B678-B63D64C7DA4B}
 	EndGlobalSection
 EndGlobal

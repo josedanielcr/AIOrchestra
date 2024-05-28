@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <PackageReference Include="josedanielcr.AIOrchestra.App.KafkaLibrary" Version="1.0.8" />
-    <PackageReference Include="StackExchange.Redis" Version="2.7.33" />
   </ItemGroup>
 
 </Project>
