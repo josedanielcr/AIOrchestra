@@ -17,5 +17,12 @@ namespace AIOrchestra.CacheService.Features.Cache
             var db = redisConnectionMultiplexer.GetDatabase();
             db.StringSet(baseRequest.OperationId, JsonConvert.SerializeObject(baseRequest));
         }
+
+        public void SaveResponseInToCache(BaseResponse baseResponse)
+        {
+            var db = redisConnectionMultiplexer.GetDatabase();
+            db.StringSet(baseResponse.OperationId, JsonConvert.SerializeObject(baseResponse));
+        }
+
     }
 }

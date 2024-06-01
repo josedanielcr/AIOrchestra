@@ -2,11 +2,10 @@
 using AIOrchestra.UserManagementService.Shared;
 using CommonLibrary;
 using KafkaLibrary.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace AIOrchestra.UserManagementService.Consumers
 {
-    public class UserManagementConsumer : IHostedService
+    public class UserManagementConsumer : IHostedService, IDisposable
     {
         private readonly IConsumer consumer;
         private readonly ILogger<UserManagementConsumer> logger;
@@ -24,18 +23,29 @@ namespace AIOrchestra.UserManagementService.Consumers
         public Task StartAsync(CancellationToken cancellationToken)
         {
             cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-            ExecuteAsync(cts.Token);
-            return executingTask.IsCompleted ? executingTask : Task.CompletedTask;
+            executingTask = ExecuteAsync(cts.Token);
+            return Task.CompletedTask;
         }
 
-        private async void ExecuteAsync(CancellationToken cancellationToken)
+        private async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                var result = consumer.Consume(Topics.UserManagement);
-                using var scope = serviceScopeFactory.CreateScope();
-                var serviceProvider = scope.ServiceProvider;
-                await InvokeMethod.InvokeMethodAsync(serviceProvider, result.HandlerMethod, result);
+                try
+                {
+                    var result = consumer.Consume(Topics.UserManagement);
+                    using var scope = serviceScopeFactory.CreateScope();
+                    var serviceProvider = scope.ServiceProvider;
+                    await InvokeMethod.InvokeMethodAsync(serviceProvider, result.HandlerMethod, result);
+                }
+                catch (OperationCanceledException)
+                {
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "An error occurred while consuming messages.");
+                }
             }
         }
 

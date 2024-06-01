@@ -2,75 +2,77 @@
 using Confluent.Kafka;
 using KafkaLibrary.Interfaces;
 using SharedLibrary;
-using System;
 using System.Diagnostics;
 using System.Net;
 
 namespace KafkaLibrary.Implementations
 {
-    public class Producer : IProducer
+    public class Producer : IProducer, IDisposable
     {
-        private IProducer<string, BaseRequest> producer;
+        private IProducer<string, BaseRequest> requestProducer;
+        private IProducer<string, BaseResponse> responseProducer;
         private Stopwatch stopwatch;
 
         public Producer(ProducerConfig config)
         {
-            producer = new ProducerBuilder<string, BaseRequest>(config)
+            requestProducer = new ProducerBuilder<string, BaseRequest>(config)
                 .SetValueSerializer(new JsonSerializer<BaseRequest>())
                 .Build();
+
+            responseProducer = new ProducerBuilder<string, BaseResponse>(config)
+                .SetValueSerializer(new JsonSerializer<BaseResponse>())
+                .Build();
+
             stopwatch = new Stopwatch();
         }
 
         public void Dispose()
         {
-            producer.Flush(TimeSpan.FromSeconds(10));
-            producer.Dispose();
+            requestProducer.Flush(TimeSpan.FromSeconds(10));
+            requestProducer.Dispose();
+
+            responseProducer.Flush(TimeSpan.FromSeconds(10));
+            responseProducer.Dispose();
         }
 
-        public async Task<BaseResponse> ProduceAsync(Topics topic, string key, BaseRequest message)
+        public async Task<BaseResponse> ProduceAsync<T>(Topics topic, string key, T message) where T : class
         {
             stopwatch.Start();
             try
             {
-                var result = await producer.ProduceAsync(EnumHelper.GetDescription(topic),
-                    new Message<string, BaseRequest> { Key = key, Value = message });
+                DeliveryResult<string, T>? result;
 
-                stopwatch.Stop();
-
-                CacheOperation(key, message);
-
-                return GenerateApplicationResponse.GenerateResponse(
-                    message.OperationId,
-                    message.ApiVersion,
-                    true,
-                    HttpStatusCode.OK,
-                    null,
-                    null,
-                    null,
-                    stopwatch.ElapsedMilliseconds,
-                    message.TargetTopic,
-                    new Dictionary<string, string>
+                if (message is BaseRequest baseRequest)
                 {
-                    {"Topic", result.Topic},
-                    {"Partition", result.Partition.ToString()},
-                    {"Offset", result.Offset.ToString()},
-                });
+                    var requestResult = await requestProducer.ProduceAsync(EnumHelper.GetDescription(topic),
+                        new Message<string, BaseRequest> { Key = key, Value = baseRequest });
+                    result = requestResult as DeliveryResult<string, T>;
+
+                    stopwatch.Stop();
+
+                    CacheOperation(key, baseRequest);
+
+                    //await for response
+                    return null;
+                }
+                else if (message is BaseResponse baseResponse)
+                {
+                    var responseResult = await responseProducer.ProduceAsync(EnumHelper.GetDescription(topic),
+                        new Message<string, BaseResponse> { Key = key, Value = baseResponse });
+                    result = responseResult as DeliveryResult<string, T>;
+
+                    stopwatch.Stop();
+                    return baseResponse;
+                }
+                else
+                {
+                    throw new ArgumentException("Unsupported message type.");
+                }
             }
-            catch (ProduceException<string, BaseRequest> e)
+            catch (Exception)
             {
                 stopwatch.Stop();
-
-                return GenerateApplicationResponse.GenerateResponse(
-                    message.OperationId,
-                    message.ApiVersion,
-                    false,
-                    HttpStatusCode.InternalServerError,
-                    e.Error.Code.ToString(),
-                    e.Message,
-                    null,
-                    stopwatch.ElapsedMilliseconds,
-                    message.TargetTopic,
-                    null);
+                throw;
             }
         }
 
@@ -78,7 +80,7 @@ namespace KafkaLibrary.Implementations
         {
             BaseRequest cacheMessage = message;
             cacheMessage.HandlerMethod = "Save";
-            producer.Produce(EnumHelper.GetDescription(Topics.Cache), new Message<string, BaseRequest> { Key = key, Value = message });
+            requestProducer.Produce(EnumHelper.GetDescription(Topics.Cache), new Message<string, BaseRequest> { Key = key, Value = message });
         }
     }
 }

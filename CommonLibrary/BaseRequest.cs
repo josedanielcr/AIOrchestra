@@ -13,7 +13,6 @@ namespace CommonLibrary
         public string CorrelationId { get; set; } = Guid.NewGuid().ToString();
         public Dictionary<string, string> Headers { get; set; } = new Dictionary<string, string>();
         public Topics TargetTopic { get; set; }
-        public string HandlerMethod { get; set; } = string.Empty;
         public RequestStatus Status { get; set; } = RequestStatus.Pending;
     }
 }

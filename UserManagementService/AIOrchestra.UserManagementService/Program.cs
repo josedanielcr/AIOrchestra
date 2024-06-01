@@ -6,6 +6,7 @@ ConfigureAppSettings(builder);
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Services.AddKafka(builder.Configuration);
+builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddConsumers();
 SetMethodMappings(builder);
 var app = builder.Build();

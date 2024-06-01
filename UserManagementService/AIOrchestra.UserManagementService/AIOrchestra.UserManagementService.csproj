@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="josedanielcr.AIOrchestra.App.KafkaLibrary" Version="1.0.8" />
+    <PackageReference Include="MongoDB.EntityFrameworkCore" Version="8.0.1" />
   </ItemGroup>
 
 </Project>

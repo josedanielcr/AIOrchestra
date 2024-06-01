@@ -13,7 +13,7 @@ namespace AIOrchestra.APIGateway.Features.UserManagement
 {
     public static class CreateUser
     {
-        private static readonly string HandlerMethod = "CreateUser";
+        private static readonly string HandlerMethod = "CreateUserAsync";
         public class Command : BaseRequest, IRequest<BaseResponse>
         {
             public required string Name { get; set; }
@@ -49,7 +49,7 @@ namespace AIOrchestra.APIGateway.Features.UserManagement
                     return baseResponse!;
                 }
                 request.HandlerMethod = HandlerMethod;
-                BaseResponse response = await producer.ProduceAsync(request.TargetTopic, request.OperationId, request);
+                var response = await producer.ProduceAsync(request.TargetTopic, request.OperationId, request);
                 return response;
             }
 
@@ -89,8 +89,17 @@ public class CreateUserEndpoint : ICarterModule
         {
             request.TargetTopic = Topics.UserManagement;
             var command = request.Adapt<CreateUser.Command>();
-            command.Value = request;
+            command.Value = new
+            {
+                request.Email,
+                request.Name
+            };
             var result = await sender.Send(command);
+
+            if (result == null)
+            {
+                return Results.BadRequest();
+            }
 
             if (result.IsFailure)
             {
