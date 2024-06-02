@@ -15,5 +15,8 @@ namespace CommonLibrary
 
         [Description("gateway")]
         Gateway,
+
+        [Description("ApiGatewayResponse")]
+        ApiGatewayResponse,
     }
 }

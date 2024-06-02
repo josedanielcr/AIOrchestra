@@ -4,16 +4,18 @@ using KafkaLibrary.Interfaces;
 using SharedLibrary;
 using System.Diagnostics;
 using System.Net;
+using System.Runtime.Intrinsics.Arm;
 
 namespace KafkaLibrary.Implementations
 {
     public class Producer : IProducer, IDisposable
     {
+        private readonly IConsumer consumer;
         private IProducer<string, BaseRequest> requestProducer;
         private IProducer<string, BaseResponse> responseProducer;
         private Stopwatch stopwatch;
 
-        public Producer(ProducerConfig config)
+        public Producer(ProducerConfig config, IConsumer consumer)
         {
             requestProducer = new ProducerBuilder<string, BaseRequest>(config)
                 .SetValueSerializer(new JsonSerializer<BaseRequest>())
@@ -24,6 +26,7 @@ namespace KafkaLibrary.Implementations
                 .Build();
 
             stopwatch = new Stopwatch();
+            this.consumer = consumer;
         }
 
         public void Dispose()
@@ -40,27 +43,21 @@ namespace KafkaLibrary.Implementations
             stopwatch.Start();
             try
             {
-                DeliveryResult<string, T>? result;
-
                 if (message is BaseRequest baseRequest)
                 {
-                    var requestResult = await requestProducer.ProduceAsync(EnumHelper.GetDescription(topic),
+                    await requestProducer.ProduceAsync(EnumHelper.GetDescription(topic),
                         new Message<string, BaseRequest> { Key = key, Value = baseRequest });
-                    result = requestResult as DeliveryResult<string, T>;
 
+
+                    BaseResponse response = await WaitForServiceResponse(baseRequest.OperationId);
                     stopwatch.Stop();
-
-                    CacheOperation(key, baseRequest);
-
-                    //await for response
-                    return null;
+                    response.ProcessingTime = stopwatch.ElapsedMilliseconds;
+                    return response;
                 }
                 else if (message is BaseResponse baseResponse)
                 {
-                    var responseResult = await responseProducer.ProduceAsync(EnumHelper.GetDescription(topic),
+                    await responseProducer.ProduceAsync(EnumHelper.GetDescription(topic),
                         new Message<string, BaseResponse> { Key = key, Value = baseResponse });
-                    result = responseResult as DeliveryResult<string, T>;
-
                     stopwatch.Stop();
                     return baseResponse;
                 }
@@ -76,11 +73,15 @@ namespace KafkaLibrary.Implementations
             }
         }
 
-        private void CacheOperation(string key, BaseRequest message)
+        private async Task<BaseResponse> WaitForServiceResponse(string operationId)
         {
-            BaseRequest cacheMessage = message;
-            cacheMessage.HandlerMethod = "Save";
-            requestProducer.Produce(EnumHelper.GetDescription(Topics.Cache), new Message<string, BaseRequest> { Key = key, Value = message });
+            var tcs = new TaskCompletionSource<BaseResponse>();
+            var result = consumer.Consume(Topics.ApiGatewayResponse);
+            if (result.OperationId == operationId)
+            {
+                // return 
+                tcs.SetResult(result);
+            }
         }
     }
 }

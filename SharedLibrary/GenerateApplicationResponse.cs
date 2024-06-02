@@ -15,7 +15,9 @@ namespace SharedLibrary
             object? details,
             long? ProcessingTime,
             Topics? ServicedBy,
-            Dictionary<string, string>? AdditionalDetails)
+            Dictionary<string, string>? AdditionalDetails,
+            object value,
+            string HandlerMethod)
         {
             BaseResponse response = new BaseResponse
             {
@@ -32,7 +34,9 @@ namespace SharedLibrary
                     Code = code ?? string.Empty,
                     Message = message ?? string.Empty,
                     Details = details?.ToString() ?? string.Empty
-                }
+                },
+                Value = value,
+                HandlerMethod = HandlerMethod
             };
             return response;
         }
