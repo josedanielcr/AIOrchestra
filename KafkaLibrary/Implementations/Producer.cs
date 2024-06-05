@@ -1,6 +1,7 @@
 ﻿using CommonLibrary;
 using Confluent.Kafka;
 using KafkaLibrary.Interfaces;
+using Newtonsoft.Json;
 using SharedLibrary;
 using System.Diagnostics;
 
@@ -84,6 +85,7 @@ namespace KafkaLibrary.Implementations
                         if (result.OperationId == operationId)
                         {
                             consumer.StopConsuming();
+                            result.Value = JsonConvert.DeserializeObject(result.Value.ToString()!)!;
                             return result;
                         }
                     }
