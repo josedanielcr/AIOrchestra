@@ -3,8 +3,6 @@ using Confluent.Kafka;
 using KafkaLibrary.Interfaces;
 using SharedLibrary;
 using System.Diagnostics;
-using System.Net;
-using System.Runtime.Intrinsics.Arm;
 
 namespace KafkaLibrary.Implementations
 {
@@ -49,7 +47,7 @@ namespace KafkaLibrary.Implementations
                         new Message<string, BaseRequest> { Key = key, Value = baseRequest });
 
 
-                    BaseResponse response = await WaitForServiceResponse(baseRequest.OperationId);
+                    BaseResponse response = WaitForServiceResponse(baseRequest.OperationId);
                     stopwatch.Stop();
                     response.ProcessingTime = stopwatch.ElapsedMilliseconds;
                     return response;
@@ -73,14 +71,28 @@ namespace KafkaLibrary.Implementations
             }
         }
 
-        private async Task<BaseResponse> WaitForServiceResponse(string operationId)
+        private BaseResponse WaitForServiceResponse(string operationId)
         {
-            var tcs = new TaskCompletionSource<BaseResponse>();
-            var result = consumer.Consume(Topics.ApiGatewayResponse);
-            if (result.OperationId == operationId)
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+            try
             {
-                // return 
-                tcs.SetResult(result);
+                return Task.Run(() =>
+                {
+                    while (!cts.Token.IsCancellationRequested)
+                    {
+                        var result = consumer.ConsumeResponse(Topics.ApiGatewayResponse);
+                        if (result.OperationId == operationId)
+                        {
+                            consumer.StopConsuming();
+                            return result;
+                        }
+                    }
+                    throw new TimeoutException("The operation timed out.");
+                }, cts.Token).GetAwaiter().GetResult();
+            }
+            catch (OperationCanceledException)
+            {
+                throw new TimeoutException("The operation was canceled.");
             }
         }
     }

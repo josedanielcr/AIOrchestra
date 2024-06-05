@@ -69,7 +69,9 @@ namespace AIOrchestra.APIGateway.Features.UserManagement
                         null,
                         null,
                         request.TargetTopic,
-                        null));
+                        null,
+                        request.Value,
+                        request.HandlerMethod));
                 }
                 return (false, null);
             }

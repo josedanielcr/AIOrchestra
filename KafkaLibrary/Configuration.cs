@@ -24,11 +24,16 @@ namespace KafkaLibrary
                 GroupId = configuration["Kafka:GroupId"],
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };
-
-            services.AddSingleton<IProducer, Producer>(provider =>
-                new Producer(producerConfig));
             services.AddSingleton<IConsumer, Consumer>(provider =>
                 new Consumer(consumerConfig));
+
+
+            services.AddSingleton<IProducer, Producer>(provider =>
+            {
+                var consumer = provider.GetRequiredService<IConsumer>();
+                return new Producer(producerConfig, consumer);
+            });
+
             return services;
         }
     }

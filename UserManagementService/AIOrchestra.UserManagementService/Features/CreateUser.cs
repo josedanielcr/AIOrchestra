@@ -22,10 +22,10 @@ namespace AIOrchestra.UserManagementService.Features
         {
             User user = ExtractUserFromRequest(request);
             await AddUserToDatabaseAsync(user);
-            await SendResponseToApiGateway(request, user);
+            SendResponseToApiGateway(request, user);
         }
 
-        private async Task SendResponseToApiGateway(BaseRequest request, User user)
+        private void SendResponseToApiGateway(BaseRequest request, User user)
         {
             var response = SharedLibrary.GenerateApplicationResponse.GenerateResponse(
                             request.OperationId,
@@ -42,13 +42,21 @@ namespace AIOrchestra.UserManagementService.Features
                             request.HandlerMethod
             );
 
-            await producer.ProduceAsync(Topics.ApiGatewayResponse, request.OperationId, response);
+            producer.ProduceAsync(Topics.ApiGatewayResponse, request.OperationId, response);
         }
 
         private async Task AddUserToDatabaseAsync(User user)
         {
-            await dbContext.Users.AddAsync(user);
-            await dbContext.SaveChangesAsync();
+            try
+            {
+                await dbContext.Users.AddAsync(user);
+                await dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while adding user to database" + e);
+                throw;
+            }
         }
 
         private User ExtractUserFromRequest(BaseRequest request)
