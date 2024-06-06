@@ -2,8 +2,10 @@
 using Confluent.Kafka;
 using KafkaLibrary.Interfaces;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SharedLibrary;
 using System.Diagnostics;
+using System.Dynamic;
 
 namespace KafkaLibrary.Implementations
 {
@@ -85,7 +87,18 @@ namespace KafkaLibrary.Implementations
                         if (result.OperationId == operationId)
                         {
                             consumer.StopConsuming();
-                            result.Value = JsonConvert.DeserializeObject(result.Value.ToString()!)!;
+
+                            if (result.Value is IEnumerable<JToken> jTokens)
+                            {
+                                var value = ConvertJTokenEnumerableToObject(jTokens);
+                                result.Value = value;
+                            }
+                            else
+                            {
+                                var singleValue = ConvertJTokenToObject((JToken)result.Value);
+                                result.Value = singleValue;
+                            }
+
                             return result;
                         }
                     }
@@ -95,6 +108,33 @@ namespace KafkaLibrary.Implementations
             catch (OperationCanceledException)
             {
                 throw new TimeoutException("The operation was canceled.");
+            }
+        }
+
+        private object ConvertJTokenEnumerableToObject(IEnumerable<JToken> tokens)
+        {
+            dynamic expando = new ExpandoObject();
+            var expandoDict = (IDictionary<string, object>)expando;
+            var obj_linq = tokens.Cast<KeyValuePair<string, JToken>>();
+
+            foreach (var kvp in obj_linq)
+            {
+                expandoDict[kvp.Key] = ConvertJTokenToObject(kvp.Value);
+            }
+
+            return expando;
+        }
+
+        private object ConvertJTokenToObject(JToken token)
+        {
+            switch (token.Type)
+            {
+                case JTokenType.Object:
+                    return token.ToObject<Dictionary<string, object>>()!;
+                case JTokenType.Array:
+                    return token.ToObject<List<object>>()!;
+                default:
+                    return ((JValue)token).Value!;
             }
         }
     }

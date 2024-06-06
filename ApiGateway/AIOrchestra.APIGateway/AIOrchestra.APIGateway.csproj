@@ -10,7 +10,7 @@
 		<PackageReference Include="Carter" Version="8.2.0" />
 		<PackageReference Include="Confluent.Kafka" Version="2.4.0" />
 		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.1" />
-		<PackageReference Include="josedanielcr.AIOrchestra.App.KafkaLibrary" Version="1.0.14" />
+		<PackageReference Include="josedanielcr.AIOrchestra.App.KafkaLibrary" Version="1.0.20" />
 		<PackageReference Include="Mapster" Version="7.4.0" />
 		<PackageReference Include="MediatR" Version="12.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.6" />
@@ -25,14 +25,14 @@
 
 	<ItemGroup>
 		<Compile Update="Resources\ApplicationErrorCodes.Designer.cs">
-		  <DesignTime>True</DesignTime>
-		  <AutoGen>True</AutoGen>
-		  <DependentUpon>ApplicationErrorCodes.resx</DependentUpon>
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>ApplicationErrorCodes.resx</DependentUpon>
 		</Compile>
 		<Compile Update="Resources\ApplicationErrors.Designer.cs">
-		  <DesignTime>True</DesignTime>
-		  <AutoGen>True</AutoGen>
-		  <DependentUpon>ApplicationErrors.resx</DependentUpon>
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>ApplicationErrors.resx</DependentUpon>
 		</Compile>
 		<Compile Update="Resources\ServiceEndpoints.Designer.cs">
 			<DesignTime>True</DesignTime>
@@ -43,12 +43,12 @@
 
 	<ItemGroup>
 		<EmbeddedResource Update="Resources\ApplicationErrorCodes.resx">
-		  <Generator>PublicResXFileCodeGenerator</Generator>
-		  <LastGenOutput>ApplicationErrorCodes.Designer.cs</LastGenOutput>
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>ApplicationErrorCodes.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
 		<EmbeddedResource Update="Resources\ApplicationErrors.resx">
-		  <Generator>PublicResXFileCodeGenerator</Generator>
-		  <LastGenOutput>ApplicationErrors.Designer.cs</LastGenOutput>
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>ApplicationErrors.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
 		<EmbeddedResource Update="Resources\ServiceEndpoints.resx">
 			<Generator>PublicResXFileCodeGenerator</Generator>
