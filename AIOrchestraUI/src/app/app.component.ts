@@ -1,7 +1,6 @@
-import { Component, Inject } from '@angular/core';
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
   selector: 'app-root',
@@ -10,8 +9,4 @@ import { AuthService } from '@auth0/auth0-angular';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  title = 'AIOrchestraUI';
-
-  constructor(@Inject(DOCUMENT) public document: Document, public auth: AuthService) {}
-}
+export class AppComponent {}

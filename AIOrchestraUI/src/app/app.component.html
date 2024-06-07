@@ -1,11 +1,1 @@
-<button (click)="auth.loginWithRedirect()">
-    Login
-</button>
-<button (click)="auth.logout({ logoutParams: { returnTo: document.location.origin } })">
-    Log out
-</button>
-
-<ul *ngIf="auth.user$ | async as user">
-    <li>{{ user.name }}</li>
-    <li>{{ user.email }}</li>
-</ul>
+<router-outlet></router-outlet>
