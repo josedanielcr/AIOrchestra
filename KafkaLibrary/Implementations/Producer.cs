@@ -87,19 +87,7 @@ namespace KafkaLibrary.Implementations
                         if (result.OperationId == operationId)
                         {
                             consumer.StopConsuming();
-
-                            if (result.Value is IEnumerable<JToken> jTokens)
-                            {
-                                var value = ConvertJTokenEnumerableToObject(jTokens);
-                                result.Value = value;
-                            }
-                            else
-                            {
-                                var singleValue = ConvertJTokenToObject((JToken)result.Value);
-                                result.Value = singleValue;
-                            }
-
-                            return result;
+                            return ManageTopicResult(result);
                         }
                     }
                     throw new TimeoutException("The operation timed out.");
@@ -109,6 +97,27 @@ namespace KafkaLibrary.Implementations
             {
                 throw new TimeoutException("The operation was canceled.");
             }
+        }
+
+        private BaseResponse ManageTopicResult(BaseResponse result)
+        {
+            if (result.Value == null)
+            {
+                return result;
+            }
+
+            if (result.Value is IEnumerable<JToken> jTokens)
+            {
+                var value = ConvertJTokenEnumerableToObject(jTokens);
+                result.Value = value;
+            }
+            else
+            {
+                var singleValue = ConvertJTokenToObject((JToken)result.Value);
+                result.Value = singleValue;
+            }
+
+            return result;
         }
 
         private object ConvertJTokenEnumerableToObject(IEnumerable<JToken> tokens)

@@ -1,4 +1,4 @@
-﻿using AIOrchestra.UserManagementService.Entities;
+﻿using AIOrchestra.UserManagementService.Common.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace AIOrchestra.UserManagementService.Database

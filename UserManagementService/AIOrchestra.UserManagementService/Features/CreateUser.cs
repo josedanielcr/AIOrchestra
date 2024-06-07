@@ -1,9 +1,11 @@
-﻿using AIOrchestra.UserManagementService.Database;
-using AIOrchestra.UserManagementService.Entities;
+﻿using AIOrchestra.UserManagementService.Common.Entities;
+using AIOrchestra.UserManagementService.Database;
 using AIOrchestra.UserManagementService.Requests;
 using CommonLibrary;
+using Confluent.Kafka;
 using KafkaLibrary.Interfaces;
 using Newtonsoft.Json;
+using System.Net;
 
 namespace AIOrchestra.UserManagementService.Features
 {
@@ -20,43 +22,74 @@ namespace AIOrchestra.UserManagementService.Features
 
         public async Task CreateUserAsync(BaseRequest request)
         {
-            User user = ExtractUserFromRequest(request);
-            await AddUserToDatabaseAsync(user);
-            SendResponseToApiGateway(request, user);
+            BaseResponse response = GenerateBaseResponse(request);
+
+            try
+            {
+                User user = ExtractUserFromRequest(request);
+                ValidateUserFields(user);
+                await AddUserToDatabaseAsync(user);
+
+                response.IsSuccess = true;
+                response.IsFailure = false;
+                response.StatusCode = HttpStatusCode.OK;
+                response.Value = user;
+            }
+            catch (Exception e)
+            {
+                response.IsSuccess = false;
+                response.IsFailure = true;
+                response.StatusCode = HttpStatusCode.InternalServerError;
+                response.Error = new CommonLibrary.Error
+                {
+                    Code = HttpStatusCode.InternalServerError.ToString(),
+                    Message = e.Message,
+                    Details = null
+                };
+            }
+            finally
+            {
+                await producer.ProduceAsync(Topics.ApiGatewayResponse, request.OperationId, response);
+            }
         }
 
-        private void SendResponseToApiGateway(BaseRequest request, User user)
+        private void ValidateUserFields(User user)
         {
-            var response = SharedLibrary.GenerateApplicationResponse.GenerateResponse(
-                            request.OperationId,
-                            request.ApiVersion,
-                            true,
-                            System.Net.HttpStatusCode.OK,
-                            null,
-                            null,
-                            null,
-                            null,
-                            Topics.UserManagement,
-                            null,
-                            user,
-                            request.HandlerMethod
-            );
+            if (user == null)
+            {
+                throw new Exception("User is null");
+            }
 
-            producer.ProduceAsync(Topics.ApiGatewayResponse, request.OperationId, response);
+            var dbUser = dbContext.Users.FirstOrDefault(u => u.Email == user.Email);
+            if (dbUser != null)
+            {
+                throw new Exception("User already exists");
+            }
+
+            if (user.Name == null || user.Email == null)
+            {
+                throw new Exception("User name or email is null");
+            }
+        }
+
+        private static BaseResponse GenerateBaseResponse(BaseRequest request)
+        {
+            return new BaseResponse
+            {
+                OperationId = request.OperationId,
+                ApiVersion = request.ApiVersion,
+                ServicedBy = Topics.UserManagement,
+                HandlerMethod = request.HandlerMethod,
+                ProcessingTime = 0,
+                AdditionalDetails = null,
+                Value = null
+            };
         }
 
         private async Task AddUserToDatabaseAsync(User user)
         {
-            try
-            {
-                await dbContext.Users.AddAsync(user);
-                await dbContext.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error while adding user to database" + e);
-                throw;
-            }
+            await dbContext.Users.AddAsync(user);
+            await dbContext.SaveChangesAsync();
         }
 
         private User ExtractUserFromRequest(BaseRequest request)
