@@ -1,4 +1,81 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+    --dark-gray: #232323;
+    --light-gray: #8D8D8D;
+    --blue: #00C1DE;
+    --teal: #31B9B0;
+    --purple: #7B61FF;
+    --pink: #A64482;
+    --yellow: #F3CF50;
+}
 
-html, body { height: 100%; }
+html, body { height: 100%; background-color: var(--dark-gray); }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+p,a,h1,h2,h3,h4,h5,h6, span {
+    color: white;
+}
+
+
+.text-dark-gray {
+    color: var(--dark-gray);
+}
+
+.text-light-gray {
+    color: var(--light-gray);
+}
+
+.text-blue {
+    color: var(--blue);
+}
+
+.text-teal {
+    color: var(--teal);
+}
+
+.text-purple {
+    color: var(--purple);
+}
+
+.text-pink {
+    color: var(--pink);
+}
+
+.text-yellow {
+    color: var(--yellow);
+}
+
+.text-white {
+    color: white;
+}
+
+.bg-dark-gray {
+    background-color: var(--dark-gray);
+}
+
+.bg-light-gray {
+    background-color: var(--light-gray);
+}
+
+.bg-blue {
+    background-color: var(--blue);
+}
+
+.bg-teal {
+    background-color: var(--teal);
+}
+
+.bg-purple {
+    background-color: var(--purple);
+}
+
+.bg-pink {
+    background-color: var(--pink);
+}
+
+.bg-yellow {
+    background-color: var(--yellow);
+}
+
+.bg-white {
+    background-color: white;
+}
