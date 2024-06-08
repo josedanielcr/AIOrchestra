@@ -4,6 +4,7 @@ using AIOrchestra.UserManagementService.Requests;
 using CommonLibrary;
 using Confluent.Kafka;
 using KafkaLibrary.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Net;
 
@@ -28,7 +29,10 @@ namespace AIOrchestra.UserManagementService.Features
             {
                 User user = ExtractUserFromRequest(request);
                 ValidateUserFields(user);
-                await AddUserToDatabaseAsync(user);
+
+                (user, bool wasFound) = GetUserFromDbIfExists(user);
+
+                if (!wasFound) await AddUserToDatabaseAsync(user);
 
                 response.IsSuccess = true;
                 response.IsFailure = false;
@@ -53,22 +57,21 @@ namespace AIOrchestra.UserManagementService.Features
             }
         }
 
+        private (User, bool) GetUserFromDbIfExists(User user)
+        {
+            var dbUser = dbContext.Users.FirstOrDefault(u => u.Id == user.Id);
+            if (dbUser != null)
+            {
+                return (dbUser, true);
+            }
+            return (user, false);
+        }
+
         private void ValidateUserFields(User user)
         {
             if (user == null)
             {
                 throw new Exception("User is null");
-            }
-
-            var dbUser = dbContext.Users.FirstOrDefault(u => u.Email == user.Email);
-            if (dbUser != null)
-            {
-                throw new Exception("User already exists");
-            }
-
-            if (user.Name == null || user.Email == null)
-            {
-                throw new Exception("User name or email is null");
             }
         }
 
@@ -98,7 +101,8 @@ namespace AIOrchestra.UserManagementService.Features
             return new User
             {
                 Email = createUserRequest!.Email,
-                Name = createUserRequest!.Name
+                Nickname = createUserRequest!.Nickname,
+                Picture = createUserRequest!.Picture
             };
         }
     }

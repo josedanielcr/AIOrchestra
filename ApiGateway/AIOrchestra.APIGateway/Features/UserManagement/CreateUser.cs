@@ -16,15 +16,17 @@ namespace AIOrchestra.APIGateway.Features.UserManagement
         private static readonly string HandlerMethod = "CreateUserAsync";
         public class Command : BaseRequest, IRequest<BaseResponse>
         {
-            public required string Name { get; set; }
             public required string Email { get; set; }
+            public required string Nickname { get; set; }
+            public required string Picture { get; set; }
         }
 
         public class Validator : AbstractValidator<Command>
         {
             public Validator()
             {
-                RuleFor(x => x.Name).NotEmpty();
+                RuleFor(x => x.Nickname).NotEmpty();
+                RuleFor(x => x.Picture).NotEmpty();
                 RuleFor(x => x.Email).NotEmpty().EmailAddress();
             }
         }
@@ -94,14 +96,10 @@ public class CreateUserEndpoint : ICarterModule
             command.Value = new
             {
                 request.Email,
-                request.Name
+                request.Nickname,
+                request.Picture
             };
             var result = await sender.Send(command);
-
-            if (result == null)
-            {
-                return Results.BadRequest();
-            }
 
             if (result.IsFailure)
             {

@@ -1,7 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
-import { AuthService } from '@auth0/auth0-angular';
+import { AuthService, User } from '@auth0/auth0-angular';
+import { ApiGatewayUserManagementService } from './services/api-gateway-user-management.service';
+import { BaseResponse } from './models/base.response';
+import { AppUser } from './models/user';
 
 @Component({
   selector: 'app-root',
@@ -12,13 +15,25 @@ import { AuthService } from '@auth0/auth0-angular';
 })
 export class AppComponent {
 
-  constructor(private router : Router) {
-    inject(AuthService).isAuthenticated$.subscribe((isAuthenticated) => {
-      if (isAuthenticated) {
-        this.router.navigate(['/home']);
+  constructor(private router : Router, private apiGatewayUserManagementService : ApiGatewayUserManagementService) {
+    inject(AuthService).user$.subscribe((user) => {
+      if (user) {
+        this.createProfileIfNotExists(user);      
       }
       else {
         this.router.navigate(['/explore']);
+      }
+    });
+  }
+
+  private createProfileIfNotExists(user : User) {
+    this.apiGatewayUserManagementService.createUserIfNotExists(user).subscribe({
+      next : (response : BaseResponse<AppUser>) => {
+        this.apiGatewayUserManagementService.setUser(response.value);
+        this.router.navigate(['/home']);
+      },
+      error : (error : BaseResponse<AppUser>) => {
+        console.error(error.error);
       }
     });
   }

@@ -4,9 +4,16 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideAuth0 } from '@auth0/auth0-angular';
+import { provideHttpClient, withFetch, withInterceptors, withJsonpSupport } from '@angular/common/http';
+import { tokenInterceptor } from './interceptors/token.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideHttpClient(
+      withFetch(),
+      withJsonpSupport(),
+      withInterceptors([tokenInterceptor])
+    ),
     provideRouter(routes), 
     provideAnimationsAsync(),
     provideAuth0({

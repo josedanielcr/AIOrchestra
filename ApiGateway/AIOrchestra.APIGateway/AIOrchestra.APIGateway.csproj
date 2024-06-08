@@ -20,10 +20,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Contracts\UserManagement\Responses\" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<Compile Update="Resources\ApplicationErrorCodes.Designer.cs">
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
