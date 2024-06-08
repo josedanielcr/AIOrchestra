@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Signal, WritableSignal, signal } from '@angular/core';
 import { User } from '@auth0/auth0-angular';
 import { Observable } from 'rxjs';
 import { BaseResponse } from '../models/base.response';
@@ -11,20 +11,16 @@ import { AppUser } from '../models/user';
 })
 export class ApiGatewayUserManagementService {
 
-  private user : User | null = null;
+  public user: WritableSignal<AppUser | null> = signal(null);
 
   constructor(private http : HttpClient) { }
 
-  public setUser(userData: User) {
-    this.user = userData;
-  }
-
-  public getUser(): User | null {
-    return this.user;
+  public setUser(userData: AppUser) {
+    this.user.set(userData);
   }
 
   public clearUser() {
-    this.user = null;
+    this.user.update(user => user = null);
   }
 
   public createUserIfNotExists(user : User): Observable<BaseResponse<AppUser>> {

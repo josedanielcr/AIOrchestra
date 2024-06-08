@@ -1,0 +1,26 @@
+.app-container {
+    display: flex;
+    height: 100vh;
+}
+
+app-sidebar {
+    width: 5rem;
+    height: 100%;
+    background-color: black;
+}
+
+.main-content-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+app-navbar {
+    height: 5rem;
+    width: 100%;
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 20px;
+}

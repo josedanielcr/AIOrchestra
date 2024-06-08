@@ -15,7 +15,6 @@ p,a,h1,h2,h3,h4,h5,h6, span {
     color: white;
 }
 
-
 .text-dark-gray {
     color: var(--dark-gray);
 }
@@ -78,4 +77,13 @@ p,a,h1,h2,h3,h4,h5,h6, span {
 
 .bg-white {
     background-color: white;
+}
+
+.bg-black {
+    background-color: black;
+}
+
+/* utils */
+.cursor-pointer {
+    cursor: pointer;
 }
