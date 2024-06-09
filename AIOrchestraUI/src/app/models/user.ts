@@ -1,36 +1,42 @@
 export class AppUser {
-    id: string;
-    name: string;
-    email: string;
-    age: number;
-    country: string;
-    genre: number;
-    language: number;
-    ethnicity: number;
-    modifiedAt: Date;
-    requesterId: string;
+    Id: string;
+    Name: string;
+    Email: string;
+    Nickname: string;
+    Picture: string;
+    Age: number;
+    Country: string;
+    Genre: number;
+    Language: number;
+    Ethnicity: number;
+    ModifiedAt: Date;
+    RequesterId: string;
 
     constructor(
-        id: string,
-        name: string,
-        email: string,
-        age: number,
-        country: string,
-        genre: number,
-        language: number,
-        ethnicity: number,
-        modifiedAt: Date,
-        requesterId: string
+        Id: string,
+        Name: string,
+        Email: string,
+        Nickname: string,
+        Picture: string,
+        Age: number,
+        Country: string,
+        Genre: number,
+        Language: number,
+        Ethnicity: number,
+        ModifiedAt: Date,
+        RequesterId: string
     ) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.age = age;
-        this.country = country;
-        this.genre = genre;
-        this.language = language;
-        this.ethnicity = ethnicity;
-        this.modifiedAt = new Date(modifiedAt);
-        this.requesterId = requesterId;
+        this.Id = Id;
+        this.Name = Name;
+        this.Email = Email;
+        this.Nickname = Nickname;
+        this.Picture = Picture;
+        this.Age = Age;
+        this.Country = Country;
+        this.Genre = Genre;
+        this.Language = Language;
+        this.Ethnicity = Ethnicity;
+        this.ModifiedAt = new Date(ModifiedAt);
+        this.RequesterId = RequesterId;
     }
 }

@@ -1,0 +1,21 @@
+.user-card {
+    width: 12rem;
+    height: 3rem;
+    border-radius: 0.5rem;
+}
+
+.user-card img {
+    border-radius: 0.5rem;
+}
+
+.user-nav-window {
+    margin-top: 5rem;
+    width: 12rem;
+    height: 10rem;
+    background-color: var(--light-gray);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    border-radius: 0.5rem;
+}

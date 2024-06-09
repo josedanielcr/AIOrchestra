@@ -2,13 +2,39 @@
     <div class="d-flex align-items-center h-100 ps-4">
         <h1 class="m-0">{{currSegment}}</h1>
     </div>
-    <div class="ms-auto d-flex h-100">
+    <div class="ms-auto d-flex h-100 position-relative">
+        @if (userManagementService.user(); as user) {
+            <div class="h-100 d-flex align-items-center pe-4">
+                <div class="p-2 user-card bg-light-gray cursor-pointer user-select-none" (click)="toggleUserNav()">
+                    <div class="h-100 w-100 d-flex">
+                        <img [src]="user.Picture">
+                        <span class="h-100 d-flex align-items-center ps-2">{{user.Nickname}}</span>
+                        <div class="ms-auto d-flex align-items-center">
+                            @if(isUserNavOpen) {
+                                <i class="fa-solid fa-chevron-up text-white"></i>
+                            } @else {
+                                <i class="fa-solid fa-chevron-down text-white"></i>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <p>{{userManagementService.user()?.name}}</p>
+            @if(isUserNavOpen) {
+                <div class="user-nav-window">
+                    <div class="w-100 h-100 d-flex flex-column p-2">
 
+                        <!-- logout -->
+                        <div class="mt-auto user-select-none">
+                            <hr class="text-white mb-1">
+                            <div class="w-100 d-flex">
+                                <span class="cursor-pointer" (click)="auth.logout({ logoutParams: { returnTo: document.location.origin } })">Log out</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
 
-        <div class="d-flex align-items-center h-100 pe-4">
-            <i class="fa-solid fa-2x text-white fa-arrow-right-from-bracket cursor-pointer"></i>
-        </div>
+        }
     </div>
 </div>
