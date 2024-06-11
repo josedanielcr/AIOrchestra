@@ -11,6 +11,7 @@ export class AppUser {
     Ethnicity: number;
     ModifiedAt: Date;
     RequesterId: string;
+    IsProfileCompleted : boolean;
 
     constructor(
         Id: string,
@@ -24,7 +25,8 @@ export class AppUser {
         Language: number,
         Ethnicity: number,
         ModifiedAt: Date,
-        RequesterId: string
+        RequesterId: string,
+        IsProfileCompleted : boolean
     ) {
         this.Id = Id;
         this.Name = Name;
@@ -38,5 +40,6 @@ export class AppUser {
         this.Ethnicity = Ethnicity;
         this.ModifiedAt = new Date(ModifiedAt);
         this.RequesterId = RequesterId;
+        this.IsProfileCompleted = IsProfileCompleted;
     }
 }

@@ -1,1 +1,28 @@
-<p>setup works!</p>
+<div class="row">
+    <div class="col-8">
+        <h1 class="mb-1">Setup</h1>
+        <span>Update your user information to enhance the music algorithm and receive better recommendations tailored to your preferences.</span>
+        <hr class="text-white">
+        <div class="mt-4">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <app-input [inputValue]="userManagementService.user()?.Name" formControlName="name" label="Name" [type]="InputType.Text"></app-input>
+                    </div>
+                    <div class="col-md-6">
+                        <app-input [inputValue]="userManagementService.user()?.Email" [disabled]="true" formControlName="email" label="Email" [type]="InputType.Text"></app-input>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <app-input [inputValue]="userManagementService.user()?.Nickname" [disabled]="true" formControlName="nickname" label="Nickname" [type]="InputType.Text"></app-input>
+                    </div>
+                    <div class="col-md-6">
+                        <app-input formControlName="age" label="Age" [type]="InputType.Number"></app-input>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>

@@ -21,5 +21,6 @@ namespace AIOrchestra.UserManagementService.Common.Entities
         public Ethnicity Ethnicity { get; set; } = Ethnicity.None;
         public DateTime ModifiedAt { get; set; } = DateTime.Now;
         public string RequesterId { get; set; } = string.Empty;
+        public bool IsProfileCompleted { get; set; } = false;
     }
 }

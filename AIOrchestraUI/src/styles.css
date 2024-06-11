@@ -11,7 +11,7 @@
 html, body { height: 100%; background-color: var(--dark-gray); }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-p,a,h1,h2,h3,h4,h5,h6, span {
+p,a,h1,h2,h3,h4,h5,h6, span,label {
     color: white;
 }
 

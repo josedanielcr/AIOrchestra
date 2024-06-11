@@ -1,0 +1,14 @@
+/* CSS for the input field */
+input {
+    padding: 0.8rem;
+    color: white;
+    background-color: var(--light-gray);
+    border-radius: 0.5rem;
+    outline: none;
+    border: none;
+}
+  
+input:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0.2rem var(--teal);
+}

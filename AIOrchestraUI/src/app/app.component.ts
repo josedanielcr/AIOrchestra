@@ -30,11 +30,19 @@ export class AppComponent {
     this.apiGatewayUserManagementService.createUserIfNotExists(user).subscribe({
       next : (response : BaseResponse<AppUser>) => {
         this.apiGatewayUserManagementService.setUser(response.value);
-        this.router.navigate(['/home']);
+        this.ManagePostAuthenticationRouting(response);
       },
       error : (error : BaseResponse<AppUser>) => {
         console.error(error.error);
       }
     });
+  }
+
+  private ManagePostAuthenticationRouting(response: BaseResponse<AppUser>) {
+    if (!response.value.IsProfileCompleted) {
+      this.router.navigate(['/home/setup']);
+    } else {
+      this.router.navigate(['/home/dashboard']);
+    }
   }
 }
