@@ -1,0 +1,24 @@
+button {
+    padding: .8rem;
+    width: 100%;
+    border: none;
+    border-radius: .5rem;
+    color: white;
+}
+
+
+.btn-primary {
+    background-color: var(--teal);
+}
+
+.btn-secondary {
+    background-color: var(--blue);
+}
+
+.btn-tertiary {
+    background-color: var(--pink);
+}
+
+.btn-danger {
+    background-color: red;
+}

@@ -1,4 +1,5 @@
 using AIOrchestra.UserManagementService.Configurations;
+using AIOrchestra.UserManagementService.Shared;
 using KafkaLibrary;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,7 +9,14 @@ builder.Logging.AddConsole();
 builder.Services.AddKafka(builder.Configuration);
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddConsumers();
+
+// internal services
+builder.Services.AddScoped<UserDbUtils>();
+
+// methods
 SetMethodMappings(builder);
+
+
 var app = builder.Build();
 app.Run();
 

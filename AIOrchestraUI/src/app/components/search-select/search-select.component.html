@@ -1,0 +1,15 @@
+<div class="custom-select w-100 user-select-none">
+    <label class="mb-1">{{ label }}</label>
+    <div class="select-box bg-light-gray cursor-pointer" (click)="toggleDropdown()">
+        <div class="selected-value">{{ getDisplayValue() || 'Select...' }}</div>
+        <div class="arrow ms-2"><i class="fas fa-chevron-down"></i></div>
+    </div>
+    <div class="dropdown bg-light-gray" *ngIf="isOpen">
+        <input type="text" class="bg-light-gray" [(ngModel)]="searchValue" (input)="onSearchChange(searchValue)" placeholder="Search..." />
+        <div class="options">
+            <div *ngFor="let option of filteredOptions" class="option" (click)="onOptionSelect(option)">
+                {{ option.label }}
+            </div>
+        </div>
+    </div>
+</div>

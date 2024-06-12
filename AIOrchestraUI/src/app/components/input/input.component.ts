@@ -18,10 +18,10 @@ import { Type } from './input.enum';
 })
 export class InputComponent implements ControlValueAccessor {
 
-  @Input() type : Type = Type.Text;
-  @Input() label : string = '';
-  @Input() placeholder : string = '';
-  @Input() disabled : boolean = false;
+  @Input() type: Type = Type.Text;
+  @Input() label: string = '';
+  @Input() placeholder: string = '';
+  @Input() disabled: boolean = false;
   @Input() inputValue: any = '';
 
   value: any;
@@ -40,6 +40,10 @@ export class InputComponent implements ControlValueAccessor {
     this.onTouched = fn;
   }
 
+  setDisabledState?(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+  }
+
   onInputChange(event: any) {
     this.value = event.target.value;
     this.onChange(this.value);
@@ -47,8 +51,9 @@ export class InputComponent implements ControlValueAccessor {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['inputValue']) {
+    if (changes['inputValue'] && !changes['inputValue'].firstChange) {
       this.writeValue(changes['inputValue'].currentValue);
+      this.onChange(changes['inputValue'].currentValue);
     }
   }
 }

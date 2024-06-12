@@ -10,18 +10,36 @@
                         <app-input [inputValue]="userManagementService.user()?.Name" formControlName="name" label="Name" [type]="InputType.Text"></app-input>
                     </div>
                     <div class="col-md-6">
-                        <app-input [inputValue]="userManagementService.user()?.Email" [disabled]="true" formControlName="email" label="Email" [type]="InputType.Text"></app-input>
+                        <app-input [inputValue]="userManagementService.user()?.Email" formControlName="email" label="Email" [type]="InputType.Text"></app-input>
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <app-input [inputValue]="userManagementService.user()?.Nickname" [disabled]="true" formControlName="nickname" label="Nickname" [type]="InputType.Text"></app-input>
+                        <app-input [inputValue]="userManagementService.user()?.Nickname" formControlName="nickname" label="Nickname" [type]="InputType.Text"></app-input>
                     </div>
                     <div class="col-md-6">
                         <app-input formControlName="age" label="Age" [type]="InputType.Number"></app-input>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                @if (languageOptions.length > 0 && countryOptions.length > 0 && genreOptions.length > 0) {
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <app-search-select formControlName="country" [label]="'Country'" [options]="countryOptions"></app-search-select>
+                        </div>
+                        <div class="col-md-6">
+                            <app-search-select formControlName="language" [label]="'Language'" [options]="languageOptions"></app-search-select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <app-search-select formControlName="genre" [label]="'Genre (optional)'" [options]="genreOptions"></app-search-select>
+                        </div>
+                        <div class="col-md-6">
+                            <app-search-select formControlName="ethnicity" [label]="'Ethnicity (optional)'" [options]="ethnicityOptions"></app-search-select>
+                        </div>
+                    </div>
+                }
+                <app-button [event]="onSubmit" label="Update information" [type]="buttonType.PRIMARY"></app-button>
             </form>
         </div>
     </div>
