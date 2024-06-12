@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ApiGatewayUserManagementService } from '../../services/api-gateway-user-management.service';
 import { AsyncPipe, DOCUMENT } from '@angular/common';
@@ -14,19 +14,20 @@ import { AuthService } from '@auth0/auth0-angular';
 })
 export class NavbarComponent implements OnInit {
 
-  public currSegment : string = '';
+  public currSegment : string | undefined = '';
   public user: AppUser | null = null;
   public isUserNavOpen: boolean = false;
 
-  constructor(private route : ActivatedRoute,
-    public userManagementService : ApiGatewayUserManagementService,
+  constructor(public userManagementService : ApiGatewayUserManagementService,
     @Inject(DOCUMENT) public document: Document, 
     public auth: AuthService
   ) { }
 
   ngOnInit() {
-    const urlSegments = this.route.snapshot.url;
-    this.currSegment = urlSegments[urlSegments.length - 1].path;
+    const currentUrl = window.location.href;
+    const segments = currentUrl.split('/');
+    this.currSegment = segments.pop();
+    this.currSegment = this.currSegment ? this.currSegment.charAt(0).toUpperCase() + this.currSegment.slice(1) : '';
   }
 
   public toggleUserNav() {
