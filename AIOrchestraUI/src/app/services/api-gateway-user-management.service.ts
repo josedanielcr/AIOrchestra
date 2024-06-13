@@ -26,4 +26,8 @@ export class ApiGatewayUserManagementService {
   public createUserIfNotExists(user : User): Observable<BaseResponse<AppUser>> {
     return this.http.post<BaseResponse<AppUser>>(environment.apiGateway+'/api/user', user);
   }
+
+  public setupUser(user : AppUser): Observable<BaseResponse<AppUser>> {
+    return this.http.post<BaseResponse<AppUser>>(environment.apiGateway+'/api/user/setup', user);
+  }
 }

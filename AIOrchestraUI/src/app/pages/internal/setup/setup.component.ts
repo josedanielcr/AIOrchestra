@@ -21,7 +21,7 @@ import { EthnicityService } from '../../../services/ethnicity.service';
 })
 export class SetupComponent implements OnInit {
 
-  public form: FormGroup;
+  public form: FormGroup = new FormGroup({});
   public InputType = Type;
   public buttonType = ButtonType;
   public countryOptions : Option[] = [];
@@ -35,20 +35,20 @@ export class SetupComponent implements OnInit {
     private languageService : LanguageService,
     private genreService : GenreService,
     private ethnicityService : EthnicityService) {
-
-    this.form = this.fb.group({
-      name: ['', Validators.required],
-      email: [{ value: ''}, [Validators.required, Validators.email]],
-      nickname: ['', Validators.required],
-      age: ['', [Validators.required, Validators.min(1)]],
-      country: [{ value: '', disabled: false }],
-      genre: [{ value: '', disabled: false }],
-      language: ['', Validators.required],
-      ethnicity : ['', Validators.required],
-    });
+      this.onSubmit = this.onSubmit.bind(this);
   }
 
   ngOnInit(): void {
+    this.form = this.fb.group({
+      name: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      nickname: ['', Validators.required],
+      age: ['', [Validators.required, Validators.min(1)]],
+      country: ['', Validators.required],
+      genre: ['', Validators.required],
+      language: ['', Validators.required],
+      ethnicity : ['', Validators.required],
+    });
     this.setCountries();
   }
 
@@ -61,6 +61,11 @@ export class SetupComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.form);
+    if (this.form.valid) {
+      this.userManagementService.setupUser(this.form.value).subscribe((response: any) => {
+        this.userManagementService.setUser(response.data);
+        console.log(response);
+      });
+    }
   }
 }

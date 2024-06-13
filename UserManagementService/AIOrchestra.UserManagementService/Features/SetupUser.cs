@@ -26,14 +26,18 @@ namespace AIOrchestra.UserManagementService.Features
             BaseResponse response = GenerateBaseResponse.GenerateBaseResponseSync(request);
             try
             {
-                User user = ExtractUserFromRequest(request);
-                ValidateUserFields(user);
+                User userReq = ExtractUserFromRequest(request);
+                ValidateUserFields(userReq);
 
-                (user, bool wasFound) = await userDbUtils.GetUserFromDbIfExists(user);
+                User user;
+                (user, bool wasFound) = await userDbUtils.GetUserFromDbIfExists(userReq);
                 user.IsProfileCompleted = true;
 
-                if (wasFound) await userDbUtils.UpdateUserInDatabaseAsync(user);
-
+                if (wasFound)
+                {
+                    await userDbUtils.UpdateUserInDatabaseAsync(userReq);
+                    user = userReq;
+                }
                 response.IsSuccess = true;
                 response.IsFailure = false;
                 response.StatusCode = HttpStatusCode.OK;
