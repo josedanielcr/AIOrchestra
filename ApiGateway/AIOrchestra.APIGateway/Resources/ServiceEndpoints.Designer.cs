@@ -77,5 +77,14 @@ namespace AIOrchestra.APIGateway.Resources {
                 return ResourceManager.GetString("UserManagement", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to user/setup.
+        /// </summary>
+        public static string UserManagement_Setup {
+            get {
+                return ResourceManager.GetString("UserManagement.Setup", resourceCulture);
+            }
+        }
     }
 }

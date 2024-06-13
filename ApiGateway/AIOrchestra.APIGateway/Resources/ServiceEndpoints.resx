@@ -123,4 +123,7 @@
   <data name="UserManagement" xml:space="preserve">
     <value>user</value>
   </data>
+  <data name="UserManagement.Setup" xml:space="preserve">
+    <value>user/setup</value>
+  </data>
 </root>

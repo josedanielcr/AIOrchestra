@@ -28,12 +28,17 @@ namespace AIOrchestra.UserManagementService.Features
 
             try
             {
-                User user = ExtractUserFromRequest(request);
-                ValidateUserFields(user);
+                User userReq = ExtractUserFromRequest(request);
+                ValidateUserFields(userReq);
 
-                (user, bool wasFound) = userDbUtils.GetUserFromDbIfExists(user);
+                User user;
+                (user, bool wasFound) = await userDbUtils.GetUserFromDbIfExists(userReq);
 
-                if (!wasFound) await userDbUtils.AddUserToDatabaseAsync(user);
+                if (!wasFound)
+                {
+                    await userDbUtils.AddUserToDatabaseAsync(userReq);
+                    user = userReq;
+                }
 
                 response.IsSuccess = true;
                 response.IsFailure = false;

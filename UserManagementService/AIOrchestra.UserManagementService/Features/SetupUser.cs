@@ -29,9 +29,10 @@ namespace AIOrchestra.UserManagementService.Features
                 User user = ExtractUserFromRequest(request);
                 ValidateUserFields(user);
 
-                (user, bool wasFound) = userDbUtils.GetUserFromDbIfExists(user);
+                (user, bool wasFound) = await userDbUtils.GetUserFromDbIfExists(user);
+                user.IsProfileCompleted = true;
 
-                if (wasFound) await userDbUtils.AddUserToDatabaseAsync(user);
+                if (wasFound) await userDbUtils.UpdateUserInDatabaseAsync(user);
 
                 response.IsSuccess = true;
                 response.IsFailure = false;
@@ -78,9 +79,9 @@ namespace AIOrchestra.UserManagementService.Features
                 Name = createUserRequest!.Name,
                 Age = createUserRequest!.Age,
                 Country = createUserRequest!.Country,
-                Genre = createUserRequest!.Genre,
-                Language = createUserRequest!.Language,
-                Ethnicity = createUserRequest!.Ethnicity
+                Genre = (Genre)Enum.Parse(typeof(Genre), createUserRequest!.Genre, true),
+                Language = (Languages)Enum.Parse(typeof(Languages), createUserRequest!.Language, true),
+                Ethnicity = (Ethnicity)Enum.Parse(typeof(Ethnicity), createUserRequest!.Ethnicity, true)
             };
         }
     }

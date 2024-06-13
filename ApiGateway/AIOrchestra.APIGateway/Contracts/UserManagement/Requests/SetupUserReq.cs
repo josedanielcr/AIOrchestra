@@ -1,9 +1,8 @@
-﻿using AIOrchestra.UserManagementService.Common.Enums;
-using MongoDB.Bson;
+﻿using CommonLibrary;
 
-namespace AIOrchestra.UserManagementService.Requests
+namespace AIOrchestra.APIGateway.Contracts.UserManagement.Requests
 {
-    public class SetupUserRequest
+    public class SetupUserReq : BaseRequest
     {
         public string Name { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;

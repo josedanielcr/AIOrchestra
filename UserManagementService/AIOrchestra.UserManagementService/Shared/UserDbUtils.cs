@@ -1,5 +1,6 @@
 ﻿using AIOrchestra.UserManagementService.Common.Entities;
 using AIOrchestra.UserManagementService.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace AIOrchestra.UserManagementService.Shared
 {
@@ -18,14 +19,16 @@ namespace AIOrchestra.UserManagementService.Shared
             await dbContext.SaveChangesAsync();
         }
 
-        public (User, bool) GetUserFromDbIfExists(User user)
+        public async Task UpdateUserInDatabaseAsync(User user)
         {
-            var dbUser = dbContext.Users.FirstOrDefault(u => u.Id == user.Id);
-            if (dbUser != null)
-            {
-                return (dbUser, true);
-            }
-            return (user, false);
+            dbContext.Users.Update(user);
+            await dbContext.SaveChangesAsync();
+        }
+
+        public async Task<(User, bool)> GetUserFromDbIfExists(User user)
+        {
+            var foundUser = await dbContext.Users.Where(u => u.Email == user.Email).FirstOrDefaultAsync();
+            return (foundUser!, foundUser != null);
         }
     }
 }
