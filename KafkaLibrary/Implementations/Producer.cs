@@ -79,19 +79,16 @@ namespace KafkaLibrary.Implementations
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
             try
             {
-                return Task.Run(() =>
+                while (!cts.Token.IsCancellationRequested)
                 {
-                    while (!cts.Token.IsCancellationRequested)
+                    var result = consumer.ConsumeResponse(Topics.ApiGatewayResponse);
+                    if (result.OperationId == operationId)
                     {
-                        var result = consumer.ConsumeResponse(Topics.ApiGatewayResponse);
-                        if (result.OperationId == operationId)
-                        {
-                            consumer.StopConsuming();
-                            return ManageTopicResult(result);
-                        }
+                        consumer.StopConsuming();
+                        return ManageTopicResult(result);
                     }
-                    throw new TimeoutException("The operation timed out.");
-                }, cts.Token).GetAwaiter().GetResult();
+                }
+                throw new TimeoutException("The operation timed out.");
             }
             catch (OperationCanceledException)
             {
