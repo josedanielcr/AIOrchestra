@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ApiGatewayUserManagementService } from '../../../services/api-gateway-user-management.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,4 +10,10 @@ import { Component } from '@angular/core';
 })
 export class DashboardComponent {
 
+
+  constructor(private userManagementService : ApiGatewayUserManagementService) { }
+
+  ngOnInit(): void {
+    console.log(this.userManagementService.user());    
+  }
 }

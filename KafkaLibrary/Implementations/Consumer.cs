@@ -2,7 +2,6 @@
 using Confluent.Kafka;
 using KafkaLibrary.Interfaces;
 using SharedLibrary;
-using System.Net;
 
 namespace KafkaLibrary.Implementations
 {
@@ -10,7 +9,7 @@ namespace KafkaLibrary.Implementations
     {
         private IConsumer<string, BaseRequest> consumer;
         private IConsumer<string, BaseResponse> responseConsumer;
-        private bool keepConsuming = true;
+        private bool keepConsuming;
         public Consumer(ConsumerConfig config)
         {
             consumer = new ConsumerBuilder<string, BaseRequest>(config)
@@ -26,26 +25,50 @@ namespace KafkaLibrary.Implementations
         {
             keepConsuming = true;
             consumer.Subscribe(EnumHelper.GetDescription(topic));
-            var consumeResult = consumer.Consume();
+
             while (keepConsuming)
             {
-                return consumeResult.Message.Value;
+                try
+                {
+                    var consumeResult = consumer.Consume();
+                    if (consumeResult != null)
+                    {
+                        return consumeResult.Message.Value;
+                    }
+                }
+                catch (ConsumeException ex)
+                {
+                    Console.WriteLine($"Consume error: {ex.Error.Reason}");
+                }
             }
+
             consumer.Close();
-            return new BaseRequest { };
+            return new BaseRequest();
         }
 
         public BaseResponse ConsumeResponse(Topics topic)
         {
             keepConsuming = true;
             responseConsumer.Subscribe(EnumHelper.GetDescription(topic));
-            var consumeResult = responseConsumer.Consume();
+
             while (keepConsuming)
             {
-                return consumeResult.Message.Value;
+                try
+                {
+                    var consumeResult = responseConsumer.Consume();
+                    if (consumeResult != null)
+                    {
+                        return consumeResult.Message.Value;
+                    }
+                }
+                catch (ConsumeException ex)
+                {
+                    Console.WriteLine($"Consume error: {ex.Error.Reason}");
+                }
             }
-            consumer.Close();
-            return new BaseResponse { };
+
+            responseConsumer.Close();
+            return new BaseResponse();
         }
 
         public void StopConsuming()
