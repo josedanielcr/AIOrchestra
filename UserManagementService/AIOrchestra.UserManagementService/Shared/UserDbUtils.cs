@@ -6,7 +6,7 @@ namespace AIOrchestra.UserManagementService.Shared
 {
     public class UserDbUtils
     {
-        private readonly UserManagementDbContext dbContext;
+        public readonly UserManagementDbContext dbContext;
 
         public UserDbUtils(UserManagementDbContext dbContext)
         {

@@ -5,6 +5,7 @@ using AIOrchestra.UserManagementService.Requests;
 using AIOrchestra.UserManagementService.Shared;
 using CommonLibrary;
 using KafkaLibrary.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Net;
 
@@ -29,15 +30,10 @@ namespace AIOrchestra.UserManagementService.Features
                 User userReq = ExtractUserFromRequest(request);
                 ValidateUserFields(userReq);
 
-                User user;
-                (user, bool wasFound) = await userDbUtils.GetUserFromDbIfExists(userReq);
-                user.IsProfileCompleted = true;
+                (User user, bool wasFound) = await userDbUtils.GetUserFromDbIfExists(userReq);
 
-                if (wasFound)
-                {
-                    await userDbUtils.UpdateUserInDatabaseAsync(userReq);
-                    user = userReq;
-                }
+                await UpdateUserDbAsync(userReq, user, wasFound);
+
                 response.IsSuccess = true;
                 response.IsFailure = false;
                 response.StatusCode = HttpStatusCode.OK;
@@ -58,6 +54,24 @@ namespace AIOrchestra.UserManagementService.Features
             finally
             {
                 await producer.ProduceAsync(Topics.ApiGatewayResponse, request.OperationId, response);
+            }
+        }
+
+        private async Task UpdateUserDbAsync(User userReq, User user, bool wasFound)
+        {
+            if (wasFound)
+            {
+                user.IsProfileCompleted = true;
+                user.Email = userReq.Email;
+                user.Name = userReq.Name;
+                user.Nickname = userReq.Nickname;
+                user.Age = userReq.Age;
+                user.Country = userReq.Country;
+                user.Genre = userReq.Genre;
+                user.Language = userReq.Language;
+                user.Ethnicity = userReq.Ethnicity;
+                userDbUtils.dbContext.Entry(user).State = EntityState.Modified;
+                await userDbUtils.UpdateUserInDatabaseAsync(user);
             }
         }
 
