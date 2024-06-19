@@ -171,6 +171,22 @@ services:
     networks:
       - ai-orchestra-network
 
+  music-recommender:
+    build:
+      context: ./MusicRecommenderService
+    image: ai-orchestra/music-recommender:latest
+    container_name: music-recommender
+    ports:
+      - "8088:8088"
+      - "8089:8089"
+    volumes:
+      - ./MusicRecommenderService/certificates:/app/certificates
+    environment:
+      KAFKA_BROKERS: "broker-1:29092,broker-2:29093,broker-3:29094"
+      RUNNING_IN_DOCKER: "true"
+    networks:
+      - ai-orchestra-network
+
 volumes:
   mongodb_data:
 
