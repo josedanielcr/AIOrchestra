@@ -16,7 +16,6 @@ AIOrchestra leverages a scalable and efficient event-driven architecture with mi
 - **Event-Driven Architecture**: Utilizes Kafka for asynchronous communication between services.
 - **Machine Learning**: Custom-trained model with TensorFlow for generating song recommendations.
 - **Docker**: Containerized services for consistent deployment and management.
-- **Database Synchronization**: Decoupled services with their own databases and synchronization mechanisms.
 
 ## Technologies
 - **.NET Core 8**: Framework for building microservices.
