@@ -9,7 +9,3 @@ def process():
 
 def merge_user_playcount_data(user_playcount_data, music_data):
     return pd.merge(user_playcount_data, music_data, left_on='track_id', right_on='track_id')
-
-def normalize_playcounts(merged_data):
-    merged_data['normalized_playcount'] = scaler.scale(merged_data, USER_PLAYCOUNT_COLS)
-    return merged_data

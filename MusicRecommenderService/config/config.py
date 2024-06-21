@@ -17,6 +17,7 @@ LOCAL_SSL_KEY = './certificates/server.key'
 # ML model
 MUSIC_FEATURE_COLS = ["danceability", "energy", "loudness", "speechiness", "instrumentalness", "liveness"]
 USER_PLAYCOUNT_COLS = ['playcount']
+MUSIC_PLAYCOUNT_FEATURE_COLS = ["danceability", "energy", "loudness", "speechiness", "instrumentalness", "liveness", "playcount"]
 MUSIC_DS_PATH = './data/music_data.csv'
 USER_PLAY_COUNT_PATH = './data/user_playcount_data.csv'
-RECOMMENDED_FEATURE_COLS = ['track_id', 'name', 'artist','spotify_preview_url', 'genre', 'year' ,'duration']
+RECOMMENDED_FEATURE_COLS = ['track_id', 'name', 'artist','spotify_preview_url', 'genre', 'year' ,'duration_ms']
