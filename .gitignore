@@ -524,3 +524,4 @@ e2e/*.map
 certificates/
 MusicRecommenderService/data/music_data.csv
 MusicRecommenderService/data/user_playcount_data.csv.csv
+MusicRecommenderService/data/user_playcount_data.csv
