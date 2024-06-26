@@ -1,14 +1,16 @@
 from confluent_kafka import Consumer, KafkaException, KafkaError, Producer
 from config import get_kafka_config
 from contracts.baseResponse import Error
-import internal
+import utils.internal as internal
+from config.config import KAFKA_CONSUME_TOPIC
+import json
 
 # Kafka Configuration
 kafka_config = get_kafka_config()
 
 # Initialize Kafka Consumer
 consumer = Consumer(kafka_config)
-consumer.subscribe(['musicRecommender'])
+consumer.subscribe([KAFKA_CONSUME_TOPIC])
 
 def kafka_consumer_loop():
     while True:
@@ -20,11 +22,12 @@ def kafka_consumer_loop():
                         print(f"Error: {msg.error()}")
                 else:
                     # obtains the method
-                    print(f"Consumed message: {msg.value().decode('utf-8')}")
-                    method = internal.get_internal_method_by_name(msg.value().decode('utf-8').methodName)
-                    baseResponse = internal.generate_baseResponse(msg.value().decode('utf-8'))
+                    message = json.loads(msg.value().decode('utf-8'))
+                    print(f"Received message: {message}")
+                    method = internal.get_internal_method_by_name(message['HandlerMethod'])
+                    baseResponse = internal.generate_base_response(message)
                     try:
-                        response = method(msg.value().decode('utf-8').Value)
+                        response = method(message, message['Songs'])
                         baseResponse.value = response
                         baseResponse.IsSuccess = True
                         baseResponse.IsFailure = False
@@ -42,5 +45,7 @@ def kafka_consumer_loop():
             print(f"Kafka exception: {e}")
 
 def produce_message(topic, key, value):
-    Producer.produce(topic, key=key, value=value)
+    serialized_key = key.encode('utf-8')
+    serialized_value = json.dumps(value).encode('utf-8')
+    Producer.produce(topic, key=serialized_key, value=serialized_value)
     Producer.flush()

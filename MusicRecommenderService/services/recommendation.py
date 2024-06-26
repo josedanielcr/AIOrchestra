@@ -11,12 +11,12 @@ music_data = data_processing.process_music_dataset(music_data)
 
 def recommend(user_preferences, user_songs=None, top_n=15):
     user_preference_vector = np.array([[
-            user_preferences['danceability'],
-            user_preferences['energy'],
-            user_preferences['loudness'],
-            user_preferences['speechiness'],
-            user_preferences['instrumentalness'],
-            user_preferences['liveness']
+            user_preferences['Danceability'],
+            user_preferences['Energy'],
+            user_preferences['Loudness'],
+            user_preferences['Speechiness'],
+            user_preferences['Instrumentalness'],
+            user_preferences['Liveness']
         ]])
 
     # Normalize the user preference vector to match the normalization applied to the dataset

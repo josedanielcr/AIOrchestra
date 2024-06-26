@@ -3,6 +3,7 @@ KAFKA_DOCKER_BOOTSTRAP_SERVERS = 'broker-1:29092,broker-2:29093,broker-3:29094'
 KAFKA_LOCAL_BOOTSTRAP_SERVERS = 'localhost:9092,localhost:9093,localhost:9094'
 KAFKA_GROUP_ID = 'music-recommender-group'
 KAFKA_AUTO_OFFSET_RESET = 'earliest'
+KAFKA_CONSUME_TOPIC = 'MusicRecommender'
 
 # Server
 DOCKER_HOST = '0.0.0.0'

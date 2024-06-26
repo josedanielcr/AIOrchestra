@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from services.recommendation import recommend
-from kafka_utils import kafka_consumer_loop
+from utils.kafka_utils import kafka_consumer_loop
 from config import get_server_config
 from dotenv import load_dotenv
 import threading

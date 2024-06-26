@@ -120,6 +120,9 @@
   <data name="EndpointPrefix" xml:space="preserve">
     <value>api/</value>
   </data>
+  <data name="MusicRecommender" xml:space="preserve">
+    <value>songs/recommend</value>
+  </data>
   <data name="UserManagement" xml:space="preserve">
     <value>user</value>
   </data>

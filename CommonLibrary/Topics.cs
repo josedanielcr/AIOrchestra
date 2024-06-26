@@ -18,5 +18,8 @@ namespace CommonLibrary
 
         [Description("ApiGatewayResponse")]
         ApiGatewayResponse,
+
+        [Description("MusicRecommender")]
+        MusicRecommender
     }
 }

@@ -70,6 +70,15 @@ namespace AIOrchestra.APIGateway.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to songs/recommend.
+        /// </summary>
+        public static string MusicRecommender {
+            get {
+                return ResourceManager.GetString("MusicRecommender", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to user.
         /// </summary>
         public static string UserManagement {
