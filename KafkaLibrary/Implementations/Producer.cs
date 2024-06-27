@@ -103,18 +103,40 @@ namespace KafkaLibrary.Implementations
                 return result;
             }
 
-            if (result.Value is IEnumerable<JToken> jTokens)
+            if (result.Value is JArray jArray)
             {
-                var value = ConvertJTokenEnumerableToObject(jTokens);
-                result.Value = value;
+                result.Value = ConvertJArrayToObject(jArray);
+            }
+            else if (result.Value is JObject jObject)
+            {
+                result.Value = ConvertJObjectToObject(jObject);
             }
             else
             {
-                var singleValue = ConvertJTokenToObject((JToken)result.Value);
-                result.Value = singleValue;
+                result.Value = ConvertJTokenToObject((JToken)result.Value);
             }
 
             return result;
+        }
+
+        private object ConvertJArrayToObject(JArray array)
+        {
+            var list = new List<object>();
+            foreach (var item in array)
+            {
+                list.Add(ConvertJTokenToObject(item));
+            }
+            return list;
+        }
+
+        private object ConvertJObjectToObject(JObject obj)
+        {
+            var dictionary = new Dictionary<string, object>();
+            foreach (var property in obj.Properties())
+            {
+                dictionary[property.Name] = ConvertJTokenToObject(property.Value);
+            }
+            return dictionary;
         }
 
         private object ConvertJTokenEnumerableToObject(IEnumerable<JToken> tokens)

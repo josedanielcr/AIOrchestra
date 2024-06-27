@@ -10,7 +10,7 @@
 		<PackageReference Include="Carter" Version="8.2.1" />
 		<PackageReference Include="Confluent.Kafka" Version="2.4.0" />
 		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.2" />
-		<PackageReference Include="josedanielcr.AIOrchestra.App.KafkaLibrary" Version="1.0.24" />
+		<PackageReference Include="josedanielcr.AIOrchestra.App.KafkaLibrary" Version="1.0.25" />
 		<PackageReference Include="Mapster" Version="7.4.0" />
 		<PackageReference Include="MediatR" Version="12.3.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.6" />

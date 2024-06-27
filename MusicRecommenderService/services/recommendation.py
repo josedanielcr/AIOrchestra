@@ -40,7 +40,4 @@ def recommend(user_preferences, user_songs=None, top_n=15):
     top_n_indices = np.argsort(combined_similarity[0])[-top_n:][::-1]
     recommended_songs = music_data.iloc[top_n_indices]
 
-    print("Recommended Songs:")
-    print(tabulate.tabulate(recommended_songs[RECOMMENDED_FEATURE_COLS], headers='keys', tablefmt='pretty'))
-
     return recommended_songs[RECOMMENDED_FEATURE_COLS]

@@ -1,6 +1,9 @@
+import math
 from confluent_kafka import Consumer, KafkaException, KafkaError, Producer
+from flask import jsonify
 from config import get_kafka_config
-from contracts.baseResponse import Error
+from contracts.baseResponse import BaseResponse, Error
+from contracts.song import Song
 import utils.internal as internal
 from config.config import KAFKA_CONSUME_TOPIC
 import json
@@ -11,6 +14,9 @@ kafka_config = get_kafka_config()
 # Initialize Kafka Consumer
 consumer = Consumer(kafka_config)
 consumer.subscribe([KAFKA_CONSUME_TOPIC])
+
+# Initialize Kafka Producer
+Producer = Producer(kafka_config)
 
 def kafka_consumer_loop():
     while True:
@@ -23,7 +29,6 @@ def kafka_consumer_loop():
                 else:
                     # obtains the method
                     message = json.loads(msg.value().decode('utf-8'))
-                    print(f"Received message: {message}")
                     method = internal.get_internal_method_by_name(message['HandlerMethod'])
                     baseResponse = internal.generate_base_response(message)
                     try:
@@ -44,8 +49,20 @@ def kafka_consumer_loop():
         except KafkaException as e:
             print(f"Kafka exception: {e}")
 
-def produce_message(topic, key, value):
+def produce_message(topic, key, value : BaseResponse):
+
+    # for testing create a song object with some dummy data
     serialized_key = key.encode('utf-8')
-    serialized_value = json.dumps(value).encode('utf-8')
-    Producer.produce(topic, key=serialized_key, value=serialized_value)
+    value.serviced_by = 5
+    value.from_dataframe(value.value)
+    for song in value.value:
+        if(type(song.genre) == str):
+            continue
+        if(math.isnan(song.genre)):
+            song.genre = "Unknown"
+    # value.value = None
+    value = value.to_dict()
+    value = json.dumps(value)
+    print(f"Producing message" + key)
+    Producer.produce(topic, key=serialized_key, value=value)
     Producer.flush()
