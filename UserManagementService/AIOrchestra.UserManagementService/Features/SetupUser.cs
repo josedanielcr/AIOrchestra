@@ -1,6 +1,4 @@
 ﻿using AIOrchestra.UserManagementService.Common.Entities;
-using AIOrchestra.UserManagementService.Common.Enums;
-using AIOrchestra.UserManagementService.Database;
 using AIOrchestra.UserManagementService.Requests;
 using AIOrchestra.UserManagementService.Shared;
 using CommonLibrary;
@@ -66,10 +64,12 @@ namespace AIOrchestra.UserManagementService.Features
                 user.Name = userReq.Name;
                 user.Nickname = userReq.Nickname;
                 user.Age = userReq.Age;
-                user.Country = userReq.Country;
-                user.Genre = userReq.Genre;
-                user.Language = userReq.Language;
-                user.Ethnicity = userReq.Ethnicity;
+                user.Danceability = userReq.Danceability;
+                user.Energy = userReq.Energy;
+                user.Loudness = userReq.Loudness;
+                user.Speechiness = userReq.Speechiness;
+                user.Instrumentalness = userReq.Instrumentalness;
+                user.Liveness = userReq.Liveness;
                 userDbUtils.dbContext.Entry(user).State = EntityState.Modified;
                 await userDbUtils.UpdateUserInDatabaseAsync(user);
             }
@@ -80,8 +80,7 @@ namespace AIOrchestra.UserManagementService.Features
             if (string.IsNullOrEmpty(user.Name)
                 || string.IsNullOrEmpty(user.Email)
                 || string.IsNullOrEmpty(user.Nickname)
-                || user.Age < 0
-                || string.IsNullOrEmpty(user.Country))
+                || user.Age < 0)
             {
                 throw new Exception("You must provide all neccesary data to continue the algorithm training");
             }
@@ -96,10 +95,12 @@ namespace AIOrchestra.UserManagementService.Features
                 Nickname = createUserRequest!.Nickname,
                 Name = createUserRequest!.Name,
                 Age = createUserRequest!.Age,
-                Country = createUserRequest!.Country,
-                Genre = (Genre)Enum.Parse(typeof(Genre), createUserRequest!.Genre, true),
-                Language = (Languages)Enum.Parse(typeof(Languages), createUserRequest!.Language, true),
-                Ethnicity = (Ethnicity)Enum.Parse(typeof(Ethnicity), createUserRequest!.Ethnicity, true)
+                Danceability = createUserRequest!.Danceability,
+                Energy = createUserRequest!.Energy,
+                Loudness = createUserRequest!.Loudness,
+                Speechiness = createUserRequest!.Speechiness,
+                Instrumentalness = createUserRequest!.Instrumentalness,
+                Liveness = createUserRequest!.Liveness
             };
         }
     }

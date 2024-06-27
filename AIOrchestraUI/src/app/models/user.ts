@@ -5,10 +5,12 @@ export class AppUser {
     Nickname: string;
     Picture: string;
     Age: number;
-    Country: string;
-    Genre: number;
-    Language: number;
-    Ethnicity: number;
+    Danceability: number;
+    Energy: number;
+    Speechiness: number;
+    Loudness: number;
+    Instrumentalness: number;
+    Liveness: number;
     ModifiedAt: Date;
     RequesterId: string;
     IsProfileCompleted : boolean;
@@ -20,10 +22,12 @@ export class AppUser {
         Nickname: string,
         Picture: string,
         Age: number,
-        Country: string,
-        Genre: number,
-        Language: number,
-        Ethnicity: number,
+        Danceability: number,
+        Energy: number,
+        Speechiness: number,
+        Loudness: number,
+        Instrumentalness: number,
+        Liveness: number,
         ModifiedAt: Date,
         RequesterId: string,
         IsProfileCompleted : boolean
@@ -34,10 +38,12 @@ export class AppUser {
         this.Nickname = Nickname;
         this.Picture = Picture;
         this.Age = Age;
-        this.Country = Country;
-        this.Genre = Genre;
-        this.Language = Language;
-        this.Ethnicity = Ethnicity;
+        this.Danceability = Danceability;
+        this.Energy = Energy;
+        this.Speechiness = Speechiness;
+        this.Loudness = Loudness;
+        this.Instrumentalness = Instrumentalness;
+        this.Liveness = Liveness;
         this.ModifiedAt = new Date(ModifiedAt);
         this.RequesterId = RequesterId;
         this.IsProfileCompleted = IsProfileCompleted;

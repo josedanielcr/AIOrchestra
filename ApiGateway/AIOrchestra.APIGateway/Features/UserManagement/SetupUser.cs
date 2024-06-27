@@ -20,10 +20,12 @@ namespace AIOrchestra.APIGateway.Features.UserManagement
             public string Email { get; set; } = string.Empty;
             public string Nickname { get; set; } = string.Empty;
             public int Age { get; set; } = -1;
-            public string Country { get; set; } = string.Empty;
-            public string Genre { get; set; } = string.Empty;
-            public string Language { get; set; } = string.Empty;
-            public string Ethnicity { get; set; } = string.Empty;
+            public int Danceability { get; set; }
+            public int Energy { get; set; }
+            public int Loudness { get; set; }
+            public int Speechiness { get; set; }
+            public int Instrumentalness { get; set; }
+            public int Liveness { get; set; }
         }
 
         public class Validator : AbstractValidator<Command>
@@ -43,11 +45,23 @@ namespace AIOrchestra.APIGateway.Features.UserManagement
                 RuleFor(x => x.Age)
                     .NotNull().WithMessage("Age is required.");
 
-                RuleFor(x => x.Country)
-                    .NotEmpty().WithMessage("Country is required.");
+                RuleFor(x => x.Danceability)
+                    .NotNull().WithMessage("Danceability is required.");
 
-                RuleFor(x => x.Language)
-                    .NotEmpty().WithMessage("Language is required.");
+                RuleFor(x => x.Energy)
+                    .NotNull().WithMessage("Energy is required.");
+
+                RuleFor(x => x.Loudness)
+                    .NotNull().WithMessage("Loudness is required.");
+
+                RuleFor(x => x.Speechiness)
+                    .NotNull().WithMessage("Speechiness is required.");
+
+                RuleFor(x => x.Instrumentalness)
+                    .NotNull().WithMessage("Instrumentalness is required.");
+
+                RuleFor(x => x.Liveness)
+                    .NotNull().WithMessage("Liveness is required.");
             }
         }
 
@@ -119,10 +133,12 @@ public class SetupUserEndpoint : ICarterModule
                 request.Email,
                 request.Nickname,
                 request.Age,
-                request.Country,
-                request.Genre,
-                request.Language,
-                request.Ethnicity
+                request.Danceability,
+                request.Energy,
+                request.Loudness,
+                request.Speechiness,
+                request.Instrumentalness,
+                request.Liveness
             };
             var result = await sender.Send(command);
 

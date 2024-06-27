@@ -21,21 +21,32 @@
                         <app-input formControlName="age" label="Age" [type]="InputType.Number"></app-input>
                     </div>
                 </div>
-                @if (languageOptions.length > 0 && countryOptions.length > 0 && genreOptions.length > 0) {
+                <div class="mt-5">
+                    <h3>Tell us how you enjoy these music attributes</h3>
+                </div>
+                @if (options.length > 0) {
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <app-search-select formControlName="country" [label]="'Country'" [options]="countryOptions"></app-search-select>
+                            <app-search-select formControlName="danceability" [label]="'Danceability'" [options]="options"></app-search-select>
                         </div>
                         <div class="col-md-6">
-                            <app-search-select formControlName="language" [label]="'Language'" [options]="languageOptions"></app-search-select>
+                            <app-search-select formControlName="energy" [label]="'Energy'" [options]="options"></app-search-select>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <app-search-select formControlName="genre" [label]="'Genre (optional)'" [options]="genreOptions"></app-search-select>
+                            <app-search-select formControlName="speechiness" [label]="'Speechiness'" [options]="options"></app-search-select>
                         </div>
                         <div class="col-md-6">
-                            <app-search-select formControlName="ethnicity" [label]="'Ethnicity (optional)'" [options]="ethnicityOptions"></app-search-select>
+                            <app-search-select formControlName="loudness" [label]="'Loudness'" [options]="options"></app-search-select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <app-search-select formControlName="instrumentalness" [label]="'Instrumentalness'" [options]="options"></app-search-select>
+                        </div>
+                        <div class="col-md-6">
+                            <app-search-select formControlName="liveness" [label]="'Liveness'" [options]="options"></app-search-select>
                         </div>
                     </div>
                 }

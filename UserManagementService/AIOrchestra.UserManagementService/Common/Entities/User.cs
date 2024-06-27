@@ -1,6 +1,5 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
-using AIOrchestra.UserManagementService.Common.Enums;
 
 namespace AIOrchestra.UserManagementService.Common.Entities
 {
@@ -15,11 +14,12 @@ namespace AIOrchestra.UserManagementService.Common.Entities
         public string Nickname { get; set; } = string.Empty;
         public string Picture { get; set; } = string.Empty;
         public int Age { get; set; } = -1;
-        public string Country { get; set; } = string.Empty;
-        public Genre Genre { get; set; } = Genre.None;
-        public Languages Language { get; set; } = Languages.None;
-        public Ethnicity Ethnicity { get; set; } = Ethnicity.None;
-        public DateTime ModifiedAt { get; set; } = DateTime.Now;
+        public int? Danceability { get; set; }
+        public int? Energy { get; set; }
+        public int? Loudness { get; set; }
+        public int? Speechiness { get; set; }
+        public int? Instrumentalness { get; set; }
+        public int? Liveness { get; set; }
         public string RequesterId { get; set; } = string.Empty;
         public bool IsProfileCompleted { get; set; } = false;
     }

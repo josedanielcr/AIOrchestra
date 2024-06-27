@@ -3,19 +3,15 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { InputComponent } from '../../../components/input/input.component';
 import { Type } from '../../../components/input/input.enum';
 import { ApiGatewayUserManagementService } from '../../../services/api-gateway-user-management.service';
-import { CountriesService } from '../../../services/countries.service';
 import { SearchSelectComponent } from '../../../components/search-select/search-select.component';
 import { Option } from '../../../components/search-select/option.model';
-import { LanguageService } from '../../../services/language.service';
-import { GenreService } from '../../../services/genre.service';
 import { ButtonComponent } from '../../../components/button/button.component';
 import { ButtonType } from '../../../components/button/type.enum';
-import { EthnicityService } from '../../../services/ethnicity.service';
-
+import { Router, RouterModule } from '@angular/router';
 @Component({
   selector: 'app-setup',
   standalone: true,
-  imports: [ReactiveFormsModule, InputComponent, SearchSelectComponent, ButtonComponent],
+  imports: [ReactiveFormsModule, InputComponent, SearchSelectComponent, ButtonComponent, RouterModule],
   templateUrl: './setup.component.html',
   styleUrl: './setup.component.css'
 })
@@ -24,17 +20,18 @@ export class SetupComponent implements OnInit {
   public form: FormGroup = new FormGroup({});
   public InputType = Type;
   public buttonType = ButtonType;
-  public countryOptions : Option[] = [];
-  public languageOptions = this.languageService.getLanguages();
-  public genreOptions = this.genreService.getGenres();
-  public ethnicityOptions = this.ethnicityService.getEthnicities();
+
+  public options: Option[] = [
+    new Option("Dislike it strongly", 0),
+    new Option("Dislike it", 25),
+    new Option("Neutral", 50),
+    new Option("Like it", 75),
+    new Option("Like it a lot", 100)
+  ];
 
   constructor(private fb: FormBuilder, 
     public userManagementService : ApiGatewayUserManagementService,
-    private countriesService: CountriesService,
-    private languageService : LanguageService,
-    private genreService : GenreService,
-    private ethnicityService : EthnicityService) {
+    private router: Router) {
       this.onSubmit = this.onSubmit.bind(this);
   }
 
@@ -44,19 +41,12 @@ export class SetupComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       nickname: ['', Validators.required],
       age: ['', [Validators.required, Validators.min(1)]],
-      country: ['', Validators.required],
-      genre: ['', Validators.required],
-      language: ['', Validators.required],
-      ethnicity : ['', Validators.required],
-    });
-    this.setCountries();
-  }
-
-  private setCountries() {
-    this.countriesService.getCountries().subscribe((countries: any) => {
-      this.countryOptions = countries.data.map((country: any) => {
-        return { label: country.name, value: country.iso3 };
-      });
+      danceability: ['', [Validators.required, Validators.min(0), Validators.max(100)]],
+      energy: ['', [Validators.required, Validators.min(0), Validators.max(100)]],
+      speechiness: ['', [Validators.required, Validators.min(0), Validators.max(100)]],
+      loudness: ['', [Validators.required, Validators.min(0), Validators.max(100)]],
+      instrumentalness: ['', [Validators.required, Validators.min(0), Validators.max(100)]],
+      liveness: ['', [Validators.required, Validators.min(0), Validators.max(100)]]
     });
   }
 
@@ -64,7 +54,7 @@ export class SetupComponent implements OnInit {
     if (this.form.valid) {
       this.userManagementService.setupUser(this.form.value).subscribe((response: any) => {
         this.userManagementService.setUser(response.data);
-        console.log(response);
+        this.router.navigate(['/home/dashboard']);
       });
     }
   }
