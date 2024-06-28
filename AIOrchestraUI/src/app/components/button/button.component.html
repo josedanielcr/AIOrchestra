@@ -1,1 +1,4 @@
-<button [ngClass]="getButtonClass()" (click)="handleClick()">{{ label }}</button>
+<button [ngClass]="getButtonClass()" (click)="handleClick()">
+    <i [class]="icon"></i>
+    {{ label }}
+</button>

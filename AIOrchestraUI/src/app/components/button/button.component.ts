@@ -14,6 +14,7 @@ export class ButtonComponent {
   @Input() label: string = '';
   @Input() event: Function = () => {};
   @Input() type: ButtonType = ButtonType.PRIMARY;
+  @Input() icon : string = '';
 
   constructor() { }
 

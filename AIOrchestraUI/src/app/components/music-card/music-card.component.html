@@ -1,0 +1,34 @@
+<div class="music-card-container bg-black w-100 d-flex align-items-center user-select-none">
+    <div class="play-song-container bg-dark-gray ms-3 d-flex align-items-center justify-content-center">
+        <audio #audioPlayer [src]="song.spotify_preview_url" (ended)="pausePlayButton()" (timeupdate)="updateTime(audioPlayer)"></audio>
+        @if(isPlaying){
+            <i class="fa-solid fa-pause text-white fa-lg" (click)="togglePlayButton()"></i>
+        }
+        @else {
+            <i class="fa-solid fa-play text-white fa-lg" (click)="togglePlayButton()"></i>
+        }
+    </div>
+    <div class="ms-3 song-info-container">
+        <div class="d-flex">
+            <h4 class="mb-0" [ngClass]="{
+                'text-pink': isPlaying,
+                'text-white': !isPlaying
+            }">{{song.name}}</h4>
+            @if(isPlaying){
+                <div class="ms-2">
+                    <div class="bar-container">
+                        <div class="bar bar1"></div>
+                        <div class="bar bar2"></div>
+                        <div class="bar bar3"></div>
+                      </div>          
+                </div>
+            }
+        </div>
+        <span>{{song.artist}} | {{song.year}} | {{song.genre}}</span>
+    </div>
+    @if(isPlaying){
+        <div class="ms-auto d-flex align-items-center justify-content-center h-100 me-2">
+            <span class="text-white">00:{{timeLeft < 10 ? '0'+timeLeft : timeLeft}}</span>
+        </div>
+    }
+</div>
