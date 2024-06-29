@@ -123,6 +123,12 @@
   <data name="MusicRecommender" xml:space="preserve">
     <value>songs/recommend</value>
   </data>
+  <data name="PlaylistService" xml:space="preserve">
+    <value>playlist</value>
+  </data>
+  <data name="PlaylistService.User" xml:space="preserve">
+    <value>playlist/user</value>
+  </data>
   <data name="UserManagement" xml:space="preserve">
     <value>user</value>
   </data>

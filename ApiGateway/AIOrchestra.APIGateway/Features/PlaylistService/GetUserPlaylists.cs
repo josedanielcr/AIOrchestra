@@ -1,5 +1,5 @@
-﻿using AIOrchestra.APIGateway.Contracts.UserManagement.Requests;
-using AIOrchestra.APIGateway.Features.UserManagement;
+﻿using AIOrchestra.APIGateway.Contracts.PlaylistService;
+using AIOrchestra.APIGateway.Features.PlaylistService;
 using AIOrchestra.APIGateway.Resources;
 using AIOrchestra.APIGateway.Shared;
 using Carter;
@@ -8,27 +8,21 @@ using FluentValidation;
 using KafkaLibrary.Interfaces;
 using Mapster;
 using MediatR;
-using System.Net;
 
-namespace AIOrchestra.APIGateway.Features.UserManagement
+namespace AIOrchestra.APIGateway.Features.PlaylistService
 {
-    public static class CreateUser
+    public static class GetUserPlaylists
     {
-        private static readonly string HandlerMethod = "CreateUserAsync";
         public class Command : BaseRequest, IRequest<BaseResponse>
         {
-            public required string Email { get; set; }
-            public required string Nickname { get; set; }
-            public required string Picture { get; set; }
+            public string UserId { get; set; } = string.Empty;
         }
 
         public class Validator : AbstractValidator<Command>
         {
             public Validator()
             {
-                RuleFor(x => x.Nickname).NotEmpty();
-                RuleFor(x => x.Picture).NotEmpty();
-                RuleFor(x => x.Email).NotEmpty().EmailAddress();
+                RuleFor(x => x.UserId).NotEmpty();
             }
         }
 
@@ -37,8 +31,7 @@ namespace AIOrchestra.APIGateway.Features.UserManagement
             private readonly IProducer producer;
             private readonly IValidator<Command> validator;
 
-            public Handler(IProducer producer,
-                IValidator<Command> validator)
+            public Handler(IProducer producer, IValidator<Command> validator)
             {
                 this.producer = producer;
                 this.validator = validator;
@@ -46,30 +39,27 @@ namespace AIOrchestra.APIGateway.Features.UserManagement
 
             public async Task<BaseResponse> Handle(Command request, CancellationToken cancellationToken)
             {
-                BaseResponse response = await APIUtils.ExecuteBaseRequest(request, HandlerMethod, producer, validator);
+                IValidator<BaseRequest> validator = (IValidator<BaseRequest>)this.validator;
+                BaseResponse response = await APIUtils.ExecuteBaseRequest(request, "GetUserPlaylists", producer, validator);
                 return response;
             }
         }
-
     }
 }
 
-// Path: AIOrchestra.APIGateway/Features/UserManagement/CreateUserEndpoint.cs
-public class CreateUserEndpoint : ICarterModule
+public class GetUserPlaylistEndpont : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        string endpoint = ServiceEndpoints.UserManagement;
+        string endpoint = ServiceEndpoints.PlaylistService_User;
         string endpointPrefix = ServiceEndpoints.EndpointPrefix;
-        app.MapPost(endpointPrefix + endpoint, async (CreateUserReq request, ISender sender) =>
+        app.MapPost(endpointPrefix + endpoint, async (GetUserPlaylistsReq request, ISender sender) =>
         {
-            request.TargetTopic = Topics.UserManagement;
-            var command = request.Adapt<CreateUser.Command>();
+            request.TargetTopic = Topics.PlaylistService;
+            var command = request.Adapt<GetUserPlaylists.Command>();
             command.Value = new
             {
-                request.Email,
-                request.Nickname,
-                request.Picture
+                request.UserId
             };
             var result = await sender.Send(command);
 

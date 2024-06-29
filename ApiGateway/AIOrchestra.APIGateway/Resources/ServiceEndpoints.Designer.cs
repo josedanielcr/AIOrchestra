@@ -79,6 +79,24 @@ namespace AIOrchestra.APIGateway.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to playlist.
+        /// </summary>
+        public static string PlaylistService {
+            get {
+                return ResourceManager.GetString("PlaylistService", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to playlist/user.
+        /// </summary>
+        public static string PlaylistService_User {
+            get {
+                return ResourceManager.GetString("PlaylistService.User", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to user.
         /// </summary>
         public static string UserManagement {

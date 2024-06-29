@@ -2,6 +2,7 @@
 using AIOrchestra.APIGateway.Contracts.UserManagement.Requests;
 using AIOrchestra.APIGateway.Features.MusicRecommender;
 using AIOrchestra.APIGateway.Resources;
+using AIOrchestra.APIGateway.Shared;
 using Carter;
 using CommonLibrary;
 using FluentValidation;
@@ -53,36 +54,9 @@ namespace AIOrchestra.APIGateway.Features.MusicRecommender
 
             public async Task<BaseResponse> Handle(Command request, CancellationToken cancellationToken)
             {
-                var (hasError, baseResponse) = ValidateRequest(request);
-                if (hasError)
-                {
-                    return baseResponse!;
-                }
-                request.HandlerMethod = HandlerMethod;
-                var response = await producer.ProduceAsync(request.TargetTopic, request.OperationId, request);
+                IValidator<BaseRequest> validator = (IValidator<BaseRequest>)this.validator;
+                BaseResponse response = await APIUtils.ExecuteBaseRequest(request, HandlerMethod, producer, validator);
                 return response;
-            }
-
-            private (bool hasErorr, BaseResponse? baseResponse) ValidateRequest(Command request)
-            {
-                var validationResult = SharedLibrary.ValidationHelper.ValidateRequest(validator, request);
-                if (!string.IsNullOrEmpty(validationResult))
-                {
-                    return (true, SharedLibrary.GenerateApplicationResponse.GenerateResponse(
-                        request.OperationId,
-                        request.ApiVersion,
-                        false,
-                        HttpStatusCode.BadRequest,
-                        ApplicationErrors.InvalidRequest_NullFields,
-                        validationResult,
-                        null,
-                        null,
-                        request.TargetTopic,
-                        null,
-                        request.Value,
-                        request.HandlerMethod));
-                }
-                return (false, null);
             }
         }
     }

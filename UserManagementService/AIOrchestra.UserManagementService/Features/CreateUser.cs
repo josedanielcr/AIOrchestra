@@ -5,8 +5,10 @@ using AIOrchestra.UserManagementService.Shared;
 using CommonLibrary;
 using Confluent.Kafka;
 using KafkaLibrary.Interfaces;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using SharedLibrary;
 using System.Net;
 
 namespace AIOrchestra.UserManagementService.Features
@@ -24,43 +26,38 @@ namespace AIOrchestra.UserManagementService.Features
 
         public async Task CreateUserAsync(BaseRequest request)
         {
-            BaseResponse response = GenerateBaseResponse.GenerateBaseResponseSync(request);
+            BaseResponse response = ApplicationResponseUtils.GenerateResponse(request.OperationId,
+                request.ApiVersion, true, HttpStatusCode.OK, null, null, null, null, Topics.PlaylistService, null, null, request.HandlerMethod);
 
             try
             {
-                User userReq = ExtractUserFromRequest(request);
-                ValidateUserFields(userReq);
-
-                User user;
-                (user, bool wasFound) = await userDbUtils.GetUserFromDbIfExists(userReq);
-
-                if (!wasFound)
-                {
-                    await userDbUtils.AddUserToDatabaseAsync(userReq);
-                    user = userReq;
-                }
-
-                response.IsSuccess = true;
-                response.IsFailure = false;
-                response.StatusCode = HttpStatusCode.OK;
-                response.Value = user;
+                response = await ExecuteCreateUser(request, response);
             }
             catch (Exception e)
             {
-                response.IsSuccess = false;
-                response.IsFailure = true;
-                response.StatusCode = HttpStatusCode.InternalServerError;
-                response.Error = new CommonLibrary.Error
-                {
-                    Code = HttpStatusCode.InternalServerError.ToString(),
-                    Message = e.Message,
-                    Details = null
-                };
+                response = ApplicationResponseUtils.AddErrorResultToResponse(response, e);
             }
             finally
             {
                 await producer.ProduceAsync(Topics.ApiGatewayResponse, request.OperationId, response);
             }
+        }
+
+        private async Task<BaseResponse> ExecuteCreateUser(BaseRequest request, BaseResponse response)
+        {
+            User userReq = ExtractUserFromRequest(request);
+            ValidateUserFields(userReq);
+
+            User user;
+            (user, bool wasFound) = await userDbUtils.GetUserFromDbIfExists(userReq);
+
+            if (!wasFound)
+            {
+                await userDbUtils.AddUserToDatabaseAsync(userReq);
+                user = userReq;
+            }
+
+            return ApplicationResponseUtils.AddSuccessResultToResponse(response, user);
         }
 
         private void ValidateUserFields(User user)
