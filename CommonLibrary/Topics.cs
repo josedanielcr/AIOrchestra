@@ -20,6 +20,9 @@ namespace CommonLibrary
         ApiGatewayResponse,
 
         [Description("MusicRecommender")]
-        MusicRecommender
+        MusicRecommender,
+
+        [Description("PlaylistService")]
+        PlaylistService
     }
 }

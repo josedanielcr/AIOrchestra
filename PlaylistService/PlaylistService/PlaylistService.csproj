@@ -11,4 +11,9 @@
     <PackageReference Include="MongoDB.EntityFrameworkCore" Version="8.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\" />
+    <Folder Include="Requests\" />
+  </ItemGroup>
+
 </Project>

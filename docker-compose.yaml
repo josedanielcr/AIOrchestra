@@ -131,6 +131,20 @@ services:
     networks:
       - ai-orchestra-network
 
+  mongodb-playlist-management:
+    image: mongodb/mongodb-community-server:7.0.4-ubi8
+    container_name: aiorchestra-mongodb-playlist-management
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: AIOrchestra123
+    volumes:
+      - mongodb_playlist_data:/data/db
+      - ./mongo-init-playlists.js:/docker-entrypoint-initdb.d/mongo-init-playlists.js:ro
+    networks:
+      - ai-orchestra-network  
+
   api-gateway:
     build:
       context: ./ApiGateway
@@ -187,8 +201,29 @@ services:
     networks:
       - ai-orchestra-network
 
+  playlist:
+    build:
+      context: ./PlaylistService
+    image: ai-orchestra/playlist:latest
+    container_name: playlist
+    ports:
+      - "8090:8090"
+      - "8091:8091"
+    volumes:
+      - ./certificates/aspnetapp.pfx:/app/certificates/aspnetapp.pfx
+    environment:
+      ASPNETCORE_HTTPS_PORT: "https://+:8091"
+      ASPNETCORE_URLS: "https://+:8091;http://+:8090"
+      KAFKA_BROKERS: "broker-1:29092,broker-2:29093,broker-3:29094"
+      ASPNETCORE_Kestrel__Certificates__Default__Path: "/app/certificates/aspnetapp.pfx"
+      ASPNETCORE_Kestrel__Certificates__Default__Password: "AIOrchestra123"
+      RUNNING_IN_DOCKER: "true"
+    networks:
+      - ai-orchestra-network
+
 volumes:
   mongodb_data:
+  mongodb_playlist_data:
 
 networks:
   ai-orchestra-network:

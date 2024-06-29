@@ -24,6 +24,7 @@ export class DashboardComponent {
     private musicRecommenderService : MusicRecommenderService
   ) {
     this.recommend = this.recommend.bind(this);
+    this.saveToPlaylist = this.saveToPlaylist.bind(this);
    }
 
   ngOnInit(): void {
@@ -45,5 +46,9 @@ export class DashboardComponent {
       this.userManagementService.user()?.Instrumentalness as number,
       this.userManagementService.user()?.Liveness as number,
       []);
+  }
+
+  public saveToPlaylist() {
+    console.log('saveToPlaylist');
   }
 }

@@ -22,7 +22,7 @@ namespace KafkaLibrary
                 BootstrapServers = configuration["Kafka:BootstrapServers"],
                 ClientId = configuration["Kafka:ClientId"],
                 GroupId = configuration["Kafka:GroupId"],
-                AutoOffsetReset = AutoOffsetReset.Earliest
+                AutoOffsetReset = AutoOffsetReset.Latest
             };
             services.AddSingleton<IConsumer, Consumer>(provider =>
                 new Consumer(consumerConfig));
