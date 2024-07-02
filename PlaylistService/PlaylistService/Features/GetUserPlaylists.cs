@@ -1,5 +1,6 @@
 ﻿using CommonLibrary;
 using KafkaLibrary.Implementations;
+using KafkaLibrary.Interfaces;
 using Newtonsoft.Json;
 using PlaylistService.Common.Entities;
 using PlaylistService.Requests;
@@ -12,9 +13,9 @@ namespace PlaylistService.Features
     public class GetUserPlaylists
     {
         private readonly PlaylistDbUtils playlistDbUtils;
-        private readonly Producer producer;
+        private readonly IProducer producer;
 
-        public GetUserPlaylists(PlaylistDbUtils playlistDbUtils, Producer producer)
+        public GetUserPlaylists(PlaylistDbUtils playlistDbUtils, IProducer producer)
         {
             this.playlistDbUtils = playlistDbUtils;
             this.producer = producer;

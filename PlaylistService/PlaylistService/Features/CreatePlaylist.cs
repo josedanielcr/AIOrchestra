@@ -1,6 +1,7 @@
 ﻿using Amazon.Runtime.Internal;
 using CommonLibrary;
 using KafkaLibrary.Implementations;
+using KafkaLibrary.Interfaces;
 using Newtonsoft.Json;
 using PlaylistService.Common.Entities;
 using PlaylistService.Requests;
@@ -13,9 +14,9 @@ namespace PlaylistService.Features
     public class CreatePlaylist
     {
         private readonly PlaylistDbUtils playlistDbUtils;
-        private readonly Producer producer;
+        private readonly IProducer producer;
 
-        public CreatePlaylist(PlaylistDbUtils playlistDbUtils, Producer producer)
+        public CreatePlaylist(PlaylistDbUtils playlistDbUtils, IProducer producer)
         {
             this.playlistDbUtils = playlistDbUtils;
             this.producer = producer;

@@ -1,7 +1,6 @@
 db = db.getSiblingDB('AIOrchestra');
 
-if (db.getUser("aiorchestraUser") === null) {
-  db.createUser({
+db.createUser({
     user: "aiorchestraUser",
     pwd: "AIOrchestra123",
     roles: [
@@ -10,5 +9,4 @@ if (db.getUser("aiorchestraUser") === null) {
         db: "AIOrchestra"
       }
     ]
-  });
-}
+});
