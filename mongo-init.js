@@ -1,12 +1,21 @@
 db = db.getSiblingDB('AIOrchestra');
 
-db.createUser({
+var user = db.getUser("aiorchestraUser");
+
+if (user === null) {
+  db.createUser({
     user: "aiorchestraUser",
     pwd: "AIOrchestra123",
-    roles: [
-      {
-        role: "readWrite",
-        db: "AIOrchestra"
-      }
-    ]
-});
+    roles: []
+  });
+}
+
+db.grantRolesToUser(
+  "aiorchestraUser",
+  [
+    {
+      role: "readWrite",
+      db: "AIOrchestra"
+    }
+  ]
+);
