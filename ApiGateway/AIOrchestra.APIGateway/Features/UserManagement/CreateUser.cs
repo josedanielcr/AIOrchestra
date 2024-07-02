@@ -8,6 +8,8 @@ using FluentValidation;
 using KafkaLibrary.Interfaces;
 using Mapster;
 using MediatR;
+using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.AspNetCore.Routing.Tree;
 using System.Net;
 
 namespace AIOrchestra.APIGateway.Features.UserManagement

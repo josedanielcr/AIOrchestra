@@ -54,7 +54,6 @@ namespace AIOrchestra.APIGateway.Features.MusicRecommender
 
             public async Task<BaseResponse> Handle(Command request, CancellationToken cancellationToken)
             {
-                IValidator<BaseRequest> validator = (IValidator<BaseRequest>)this.validator;
                 BaseResponse response = await APIUtils.ExecuteBaseRequest(request, HandlerMethod, producer, validator);
                 return response;
             }

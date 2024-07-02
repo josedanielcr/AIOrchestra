@@ -8,9 +8,9 @@ namespace AIOrchestra.APIGateway.Shared
 {
     public static class APIUtils
     {
-        public static async Task<BaseResponse> ExecuteBaseRequest<T>(BaseRequest request, string handlerMethod, IProducer producer, IValidator<T> validator)
+        public static async Task<BaseResponse> ExecuteBaseRequest<TRequest>(BaseRequest request, string handlerMethod, IProducer producer, IValidator<TRequest> validator) where TRequest : BaseRequest
         {
-            var (hasError, baseResponse) = ValidateRequest(request, validator);
+            var (hasError, baseResponse) = ValidateRequest((TRequest)request, validator);
             if (hasError)
             {
                 return baseResponse!;
@@ -20,9 +20,9 @@ namespace AIOrchestra.APIGateway.Shared
             return response;
         }
 
-        public static (bool hasError, BaseResponse? baseResponse) ValidateRequest<T>(BaseRequest request, IValidator<T> validator)
+        public static (bool hasError, BaseResponse? baseResponse) ValidateRequest<TRequest>(TRequest request, IValidator<TRequest> validator) where TRequest : BaseRequest
         {
-            var validationResult = SharedLibrary.ValidationHelper.ValidateRequest(validator, request.Value);
+            var validationResult = SharedLibrary.ValidationHelper.ValidateRequest(validator, request);
             if (!string.IsNullOrEmpty(validationResult))
             {
                 return (true, SharedLibrary.ApplicationResponseUtils.GenerateResponse(
