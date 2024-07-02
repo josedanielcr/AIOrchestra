@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ApiGatewayUserManagementService } from '../../../services/api-gateway-user-management.service';
 import { ButtonComponent } from '../../../components/button/button.component';
 import { ButtonType } from '../../../components/button/type.enum';
@@ -7,11 +7,15 @@ import { MusicPreferences } from '../../../models/music.preferences';
 import { Song } from '../../../models/song';
 import { CommonModule } from '@angular/common';
 import { MusicCardComponent } from '../../../components/music-card/music-card.component';
+import { PlaylistService } from '../../../services/playlist.service';
+import { CreatePlaylistReq } from '../../../models/requests/create.playlist.req';
+import { InputComponent } from '../../../components/input/input.component';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [ButtonComponent, CommonModule, MusicCardComponent],
+  imports: [ButtonComponent, CommonModule, MusicCardComponent, ReactiveFormsModule, InputComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -19,13 +23,25 @@ export class DashboardComponent {
 
   public ButtonType = ButtonType;
   public songs : Song[] = [];
+  public newPlaylistForm! : FormGroup;
+  public btnText : string = 'Click to save your new playlist!';
+
 
   constructor(private userManagementService : ApiGatewayUserManagementService,
-    private musicRecommenderService : MusicRecommenderService
+    private musicRecommenderService : MusicRecommenderService,
+    private playlistService : PlaylistService,
+    private fb : FormBuilder
   ) {
     this.recommend = this.recommend.bind(this);
     this.saveToPlaylist = this.saveToPlaylist.bind(this);
+    this.CreateNewPlaylistForm();
    }
+
+  private CreateNewPlaylistForm() {
+    this.newPlaylistForm = this.fb.group({
+      playlistName: ['']
+    });
+  }
 
   ngOnInit(): void {
     console.log(this.userManagementService.user());    
@@ -49,6 +65,11 @@ export class DashboardComponent {
   }
 
   public saveToPlaylist() {
-    console.log('saveToPlaylist');
+    const playlistReq = new CreatePlaylistReq(this.newPlaylistForm.value.playlistName as string,
+      this.userManagementService.user()?.Id as string,
+      this.songs.map(song => song.track_id));
+    this.playlistService.createPlaylist(playlistReq).subscribe(() => {
+      this.songs = [];
+    });
   }
 }

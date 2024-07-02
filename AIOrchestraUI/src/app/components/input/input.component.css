@@ -12,3 +12,7 @@ input:focus {
     border-color: var(--teal);
     box-shadow: 0 0 0.2rem var(--teal);
 }
+
+input::placeholder {
+    color: white;
+}

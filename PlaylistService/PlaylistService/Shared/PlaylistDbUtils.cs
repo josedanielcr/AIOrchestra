@@ -25,6 +25,12 @@ namespace PlaylistService.Shared
             return (result!, result != null);
         }
 
+        public async Task<(Playlist, bool)> GetPlaylistByNameAsync(string playlistName)
+        {
+            var result = await dbContext.Playlists.Where(p => p.Name == playlistName).FirstOrDefaultAsync();
+            return (result!, result != null);
+        }
+
         public async Task<Playlist> UpdatePlaylistAsync(Playlist playlist)
         {
             dbContext.Playlists.Update(playlist);

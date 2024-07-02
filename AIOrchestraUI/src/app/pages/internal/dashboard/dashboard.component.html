@@ -21,8 +21,18 @@
     </div>
     <div class="row mt-3">
         <div class="col-3">
-            <app-button [label]="'Save them on a new playlist'" 
-                        [type]="ButtonType.SECONDARY" 
+            <form [formGroup]="newPlaylistForm">
+                <app-input [label]="'Playlist Name'" 
+                            [placeholder]="'Enter a name for your playlist'"
+                            formControlName="playlistName">
+                </app-input>
+            </form>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-3">
+            <app-button [label]="btnText" 
+                        [type]="ButtonType.PRIMARY" 
                         icon="fa-solid fa-arrow-right"
                         [event]="saveToPlaylist">
             </app-button>

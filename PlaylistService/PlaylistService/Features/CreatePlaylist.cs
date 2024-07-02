@@ -46,7 +46,7 @@ namespace PlaylistService.Features
                 ?? throw new Exception("Playlist request is null");
 
             Playlist newPlaylist;
-            (newPlaylist, bool wasFound) = await playlistDbUtils.GetPlaylistAsync(playlistReq.Id);
+            (newPlaylist, bool wasFound) = await playlistDbUtils.GetPlaylistByNameAsync(playlistReq.Name);
 
             if (wasFound) throw new Exception("Playlist already exists");
 
