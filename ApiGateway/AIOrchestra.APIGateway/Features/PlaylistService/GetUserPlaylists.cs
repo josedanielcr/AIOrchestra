@@ -8,6 +8,8 @@ using FluentValidation;
 using KafkaLibrary.Interfaces;
 using Mapster;
 using MediatR;
+using Newtonsoft.Json.Linq;
+using System.Text.Json;
 
 namespace AIOrchestra.APIGateway.Features.PlaylistService
 {
@@ -66,7 +68,24 @@ public class GetUserPlaylistEndpont : ICarterModule
             {
                 return Results.BadRequest(result);
             }
+            addSongIdsToResponse(result);
             return Results.Ok(result);
         }).RequireAuthorization();
+    }
+
+    private void addSongIdsToResponse(BaseResponse result)
+    {
+        var resultVal = (List<object>)result.Value;
+        foreach (var playlist in resultVal)
+        {
+            var playlistDic = (Dictionary<string, object>)playlist;
+            var songIds = (JToken)playlistDic["SongIds"];
+            var songIdsResponse = new List<string>();
+            foreach (var songId in songIds)
+            {
+                songIdsResponse.Add(songId.ToString());
+            }
+            playlistDic["SongIds"] = songIdsResponse;
+        }
     }
 }
