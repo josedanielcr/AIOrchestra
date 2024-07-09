@@ -123,6 +123,9 @@
   <data name="MusicRecommender" xml:space="preserve">
     <value>songs/recommend</value>
   </data>
+  <data name="MusicRecommender.getTrack" xml:space="preserve">
+    <value>songs/tracks</value>
+  </data>
   <data name="PlaylistService" xml:space="preserve">
     <value>playlist</value>
   </data>

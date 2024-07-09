@@ -32,7 +32,7 @@ def kafka_consumer_loop():
                     method = internal.get_internal_method_by_name(message['HandlerMethod'])
                     baseResponse = internal.generate_base_response(message)
                     try:
-                        response = method(message, message['Songs'])
+                        response = method(message, message['Songs'] if 'Songs' in message and message['Songs'] is not None else None)
                         baseResponse.value = response
                         baseResponse.IsSuccess = True
                         baseResponse.IsFailure = False
