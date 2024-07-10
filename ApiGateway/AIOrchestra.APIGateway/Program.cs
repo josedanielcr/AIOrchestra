@@ -1,6 +1,7 @@
 using AIOrchestra.APIGateway.Configurations;
 using AIOrchestra.APIGateway.Configurations.Authentication;
 using AIOrchestra.APIGateway.Configurations.Packages;
+using CacheLibrary;
 using Carter;
 using FluentValidation;
 using KafkaLibrary;
@@ -14,6 +15,7 @@ builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 builder.Services.AddCarter();
 builder.Services.AddAuthentication(builder.Configuration);
 builder.Services.AddAuthorization();
+builder.Services.AddRedis(builder.Configuration);
 builder.Services.AddKafka(builder.Configuration);
 builder.Services.AddApplicationCors();
 

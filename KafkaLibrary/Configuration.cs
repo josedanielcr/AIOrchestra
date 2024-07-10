@@ -1,4 +1,5 @@
-﻿using Confluent.Kafka;
+﻿using CacheLibrary.Interfaces;
+using Confluent.Kafka;
 using KafkaLibrary.Implementations;
 using KafkaLibrary.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -24,14 +25,14 @@ namespace KafkaLibrary
                 GroupId = configuration["Kafka:GroupId"],
                 AutoOffsetReset = AutoOffsetReset.Latest
             };
+
             services.AddSingleton<IConsumer, Consumer>(provider =>
                 new Consumer(consumerConfig));
 
-
             services.AddSingleton<IProducer, Producer>(provider =>
             {
-                var consumer = provider.GetRequiredService<IConsumer>();
-                return new Producer(producerConfig, consumer);
+                var cacheUtils = provider.GetRequiredService<ICacheUtils>();
+                return new Producer(producerConfig, cacheUtils);
             });
 
             return services;

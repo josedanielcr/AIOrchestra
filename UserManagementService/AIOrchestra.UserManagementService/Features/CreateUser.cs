@@ -2,6 +2,7 @@
 using AIOrchestra.UserManagementService.Database;
 using AIOrchestra.UserManagementService.Requests;
 using AIOrchestra.UserManagementService.Shared;
+using CacheLibrary.Interfaces;
 using CommonLibrary;
 using Confluent.Kafka;
 using KafkaLibrary.Interfaces;
@@ -16,12 +17,12 @@ namespace AIOrchestra.UserManagementService.Features
     public class CreateUser
     {
         private readonly UserDbUtils userDbUtils;
-        private readonly IProducer producer;
+        private readonly ICacheUtils cacheUtils;
 
-        public CreateUser(UserDbUtils userDbUtils, IProducer producer)
+        public CreateUser(UserDbUtils userDbUtils, ICacheUtils cacheUtils)
         {
             this.userDbUtils = userDbUtils;
-            this.producer = producer;
+            this.cacheUtils = cacheUtils;
         }
 
         public async Task CreateUserAsync(BaseRequest request)
@@ -32,14 +33,16 @@ namespace AIOrchestra.UserManagementService.Features
             try
             {
                 response = await ExecuteCreateUser(request, response);
+                response.Status = RequestStatus.Completed;
             }
             catch (Exception e)
             {
                 response = ApplicationResponseUtils.AddErrorResultToResponse(response, e);
+                response.Status = RequestStatus.Failed;
             }
             finally
             {
-                await producer.ProduceAsync(Topics.ApiGatewayResponse, request.OperationId, response);
+                cacheUtils.Set(request.OperationId, response);
             }
         }
 

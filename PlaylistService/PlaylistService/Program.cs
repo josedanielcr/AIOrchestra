@@ -1,3 +1,4 @@
+using CacheLibrary;
 using KafkaLibrary;
 using PlaylistService.Configurations;
 using PlaylistService.Shared;
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 ConfigureAppSettings(builder);
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
+builder.Services.AddRedis(builder.Configuration);
 builder.Services.AddKafka(builder.Configuration);
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddConsumers();

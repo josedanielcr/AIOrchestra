@@ -1,11 +1,13 @@
 using AIOrchestra.UserManagementService.Configurations;
 using AIOrchestra.UserManagementService.Shared;
+using CacheLibrary;
 using KafkaLibrary;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigureAppSettings(builder);
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
+builder.Services.AddRedis(builder.Configuration);
 builder.Services.AddKafka(builder.Configuration);
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddConsumers();

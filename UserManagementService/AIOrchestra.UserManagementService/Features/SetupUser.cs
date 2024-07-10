@@ -1,6 +1,8 @@
 ﻿using AIOrchestra.UserManagementService.Common.Entities;
 using AIOrchestra.UserManagementService.Requests;
 using AIOrchestra.UserManagementService.Shared;
+using CacheLibrary.Implementations;
+using CacheLibrary.Interfaces;
 using CommonLibrary;
 using KafkaLibrary.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -14,12 +16,12 @@ namespace AIOrchestra.UserManagementService.Features
     public class SetupUser
     {
         private readonly UserDbUtils userDbUtils;
-        private readonly IProducer producer;
+        private readonly ICacheUtils cacheUtils;
 
-        public SetupUser(UserDbUtils userDbUtils, IProducer producer)
+        public SetupUser(UserDbUtils userDbUtils, ICacheUtils cacheUtils)
         {
             this.userDbUtils = userDbUtils;
-            this.producer = producer;
+            this.cacheUtils = cacheUtils;
         }
 
         public async Task SetupUserAsync(BaseRequest request)
@@ -30,14 +32,16 @@ namespace AIOrchestra.UserManagementService.Features
             try
             {
                 response = await ExecuteSetupUser(request, response);
+                response.Status = RequestStatus.Completed;
             }
             catch (Exception e)
             {
                 response = ApplicationResponseUtils.AddErrorResultToResponse(response, e);
+                response.Status = RequestStatus.Failed;
             }
             finally
             {
-                await producer.ProduceAsync(Topics.ApiGatewayResponse, request.OperationId, response);
+                cacheUtils.Set(request.OperationId, response);
             }
         }
 

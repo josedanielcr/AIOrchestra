@@ -1,42 +1,33 @@
-﻿using CommonLibrary;
+﻿using CacheLibrary.Interfaces;
+using CommonLibrary;
 using Confluent.Kafka;
 using KafkaLibrary.Interfaces;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using SharedLibrary;
 using System.Diagnostics;
-using System.Dynamic;
 
 namespace KafkaLibrary.Implementations
 {
     public class Producer : IProducer, IDisposable
     {
-        private readonly IConsumer consumer;
+        private readonly ICacheUtils cacheUtils;
         private IProducer<string, BaseRequest> requestProducer;
-        private IProducer<string, BaseResponse> responseProducer;
         private Stopwatch stopwatch;
+        private TimeSpan TimeSpan = TimeSpan.FromSeconds(10);
 
-        public Producer(ProducerConfig config, IConsumer consumer)
+        public Producer(ProducerConfig config, ICacheUtils cache)
         {
             requestProducer = new ProducerBuilder<string, BaseRequest>(config)
                 .SetValueSerializer(new JsonSerializer<BaseRequest>())
                 .Build();
 
-            responseProducer = new ProducerBuilder<string, BaseResponse>(config)
-                .SetValueSerializer(new JsonSerializer<BaseResponse>())
-                .Build();
-
             stopwatch = new Stopwatch();
-            this.consumer = consumer;
+            cacheUtils = cache;
         }
 
         public void Dispose()
         {
             requestProducer.Flush(TimeSpan.FromSeconds(10));
             requestProducer.Dispose();
-
-            responseProducer.Flush(TimeSpan.FromSeconds(10));
-            responseProducer.Dispose();
         }
 
         public async Task<BaseResponse> ProduceAsync<T>(Topics topic, string key, T message) where T : class
@@ -49,18 +40,10 @@ namespace KafkaLibrary.Implementations
                     await requestProducer.ProduceAsync(EnumHelper.GetDescription(topic),
                         new Message<string, BaseRequest> { Key = key, Value = baseRequest });
 
-
-                    BaseResponse response = WaitForServiceResponse(baseRequest.OperationId);
+                    BaseResponse response = await WaitForServiceResponse(baseRequest.OperationId, TimeSpan, HasServiceResponded);
                     stopwatch.Stop();
                     response.ProcessingTime = stopwatch.ElapsedMilliseconds;
                     return response;
-                }
-                else if (message is BaseResponse baseResponse)
-                {
-                    await responseProducer.ProduceAsync(EnumHelper.GetDescription(topic),
-                        new Message<string, BaseResponse> { Key = key, Value = baseResponse });
-                    stopwatch.Stop();
-                    return baseResponse;
                 }
                 else
                 {
@@ -74,96 +57,31 @@ namespace KafkaLibrary.Implementations
             }
         }
 
-        private BaseResponse WaitForServiceResponse(string operationId)
+        private async Task<BaseResponse> WaitForServiceResponse(string operationId, TimeSpan timeout, Func<string, Task<(bool, BaseResponse)>> conditionChecker)
         {
-            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
-            try
+            using CancellationTokenSource cts = new CancellationTokenSource(timeout);
+
+            while (!cts.Token.IsCancellationRequested)
             {
-                while (!cts.Token.IsCancellationRequested)
+                (bool conditionMet, BaseResponse result) = await conditionChecker(operationId);
+                if (conditionMet)
                 {
-                    var result = consumer.ConsumeResponse(Topics.ApiGatewayResponse);
-                    if (result.OperationId == operationId)
-                    {
-                        consumer.StopConsuming();
-                        return ManageTopicResult(result);
-                    }
+                    return result;
                 }
-                throw new TimeoutException("The operation timed out.");
+
+                // Delay to prevent busy-waiting
+                await Task.Delay(100, cts.Token);
             }
-            catch (OperationCanceledException)
-            {
-                throw new TimeoutException("The operation was canceled.");
-            }
+
+            throw new TimeoutException("Result was not provided by the service");
         }
 
-        private BaseResponse ManageTopicResult(BaseResponse result)
+        private async Task<(bool, BaseResponse)> HasServiceResponded(string operationId)
         {
-            if (result.Value == null)
-            {
-                return result;
-            }
-
-            if (result.Value is JArray jArray)
-            {
-                result.Value = ConvertJArrayToObject(jArray);
-            }
-            else if (result.Value is JObject jObject)
-            {
-                result.Value = ConvertJObjectToObject(jObject);
-            }
-            else
-            {
-                result.Value = ConvertJTokenToObject((JToken)result.Value);
-            }
-
-            return result;
-        }
-
-        private object ConvertJArrayToObject(JArray array)
-        {
-            var list = new List<object>();
-            foreach (var item in array)
-            {
-                list.Add(ConvertJTokenToObject(item));
-            }
-            return list;
-        }
-
-        private object ConvertJObjectToObject(JObject obj)
-        {
-            var dictionary = new Dictionary<string, object>();
-            foreach (var property in obj.Properties())
-            {
-                dictionary[property.Name] = ConvertJTokenToObject(property.Value);
-            }
-            return dictionary;
-        }
-
-        private object ConvertJTokenEnumerableToObject(IEnumerable<JToken> tokens)
-        {
-            dynamic expando = new ExpandoObject();
-            var expandoDict = (IDictionary<string, object>)expando;
-            var obj_linq = tokens.Cast<KeyValuePair<string, JToken>>();
-
-            foreach (var kvp in obj_linq)
-            {
-                expandoDict[kvp.Key] = ConvertJTokenToObject(kvp.Value);
-            }
-
-            return expando;
-        }
-
-        private object ConvertJTokenToObject(JToken token)
-        {
-            switch (token.Type)
-            {
-                case JTokenType.Object:
-                    return token.ToObject<Dictionary<string, object>>()!;
-                case JTokenType.Array:
-                    return token.ToObject<List<object>>()!;
-                default:
-                    return ((JValue)token).Value!;
-            }
+            var result = await cacheUtils.Get<BaseResponse>(operationId);
+            if (result == null) return (false, null!);
+            if (result.Status == RequestStatus.Pending) return (true, null!);
+            return (true, result);
         }
     }
 }

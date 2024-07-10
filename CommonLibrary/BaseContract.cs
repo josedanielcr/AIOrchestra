@@ -12,5 +12,6 @@ namespace CommonLibrary
         public string ApiVersion { get; set; } = string.Empty;
         public object Value { get; set; } = null!;
         public string HandlerMethod { get; set; } = string.Empty;
+        public RequestStatus Status { get; set; } = RequestStatus.Pending;
     }
 }

@@ -1,4 +1,7 @@
-﻿using CommonLibrary;
+﻿using Amazon.Runtime.Internal;
+using CacheLibrary.Implementations;
+using CacheLibrary.Interfaces;
+using CommonLibrary;
 using KafkaLibrary.Implementations;
 using KafkaLibrary.Interfaces;
 using Newtonsoft.Json;
@@ -13,12 +16,12 @@ namespace PlaylistService.Features
     public class GetUserPlaylists
     {
         private readonly PlaylistDbUtils playlistDbUtils;
-        private readonly IProducer producer;
+        private readonly ICacheUtils cacheUtils;
 
-        public GetUserPlaylists(PlaylistDbUtils playlistDbUtils, IProducer producer)
+        public GetUserPlaylists(PlaylistDbUtils playlistDbUtils, ICacheUtils cacheUtils)
         {
             this.playlistDbUtils = playlistDbUtils;
-            this.producer = producer;
+            this.cacheUtils = cacheUtils;
         }
 
         public async Task GetUserPlaylistsAsync(BaseRequest baseRequest)
@@ -28,16 +31,19 @@ namespace PlaylistService.Features
             try
             {
                 response = await ExecuteGetUserPlaylists(baseRequest, response);
+                response.Status = RequestStatus.Completed;
             }
             catch (Exception e)
             {
                 response = ApplicationResponseUtils.AddErrorResultToResponse(response, e);
+                response.Status = RequestStatus.Failed;
             }
             finally
             {
-                await producer.ProduceAsync(Topics.ApiGatewayResponse, baseRequest.OperationId, response);
+                cacheUtils.Set(response.OperationId, response);
             }
         }
+
         private async Task<BaseResponse> ExecuteGetUserPlaylists(BaseRequest baseRequest, BaseResponse response)
         {
             Playlist playlistReq = ExtractPlaylistFromRequest(baseRequest)

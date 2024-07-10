@@ -1,4 +1,6 @@
 ﻿using Amazon.Runtime.Internal;
+using CacheLibrary.Implementations;
+using CacheLibrary.Interfaces;
 using CommonLibrary;
 using KafkaLibrary.Implementations;
 using KafkaLibrary.Interfaces;
@@ -14,12 +16,12 @@ namespace PlaylistService.Features
     public class CreatePlaylist
     {
         private readonly PlaylistDbUtils playlistDbUtils;
-        private readonly IProducer producer;
+        private readonly ICacheUtils cacheUtils;
 
-        public CreatePlaylist(PlaylistDbUtils playlistDbUtils, IProducer producer)
+        public CreatePlaylist(PlaylistDbUtils playlistDbUtils, ICacheUtils cacheUtils)
         {
             this.playlistDbUtils = playlistDbUtils;
-            this.producer = producer;
+            this.cacheUtils = cacheUtils;
         }
 
         public async Task CreatePlaylistAsync(BaseRequest baseRequest)
@@ -29,14 +31,16 @@ namespace PlaylistService.Features
             try
             {
                 response = await ExecutePlaylistCreation(baseRequest, response);
+                response.Status = RequestStatus.Completed;
             }
             catch (Exception e)
             {
                 response = ApplicationResponseUtils.AddErrorResultToResponse(response, e);
+                response.Status = RequestStatus.Failed;
             }
             finally
             {
-                await producer.ProduceAsync(Topics.ApiGatewayResponse, baseRequest.OperationId, response);
+                cacheUtils.Set(response.OperationId, response);
             }
         }
 
