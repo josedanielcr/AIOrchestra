@@ -17,12 +17,21 @@ namespace CacheLibrary.Implementations
 
         public async Task<T> Get<T>(string key)
         {
-            var value = await db.StringGetAsync(key);
-            if (value.HasValue)
+            try
             {
-                return JsonConvert.DeserializeObject<T>(value!)!;
+                var value = await db.StringGetAsync(key);
+                if (value.HasValue)
+                {
+                    var stringValue = value.ToString();
+                    return JsonConvert.DeserializeObject<T>(stringValue)!;
+                }
+                return default!;
             }
-            return default!;
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         public void Remove(string key)

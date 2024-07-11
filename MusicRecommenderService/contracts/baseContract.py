@@ -1,6 +1,7 @@
 import json
 import uuid
 from typing import Any, List
+from contracts.baseContactStatus import StatusCode
 
 import pandas as pd
 
@@ -12,13 +13,15 @@ class BaseContract:
         self.api_version: str = ""
         self.value: Any = None
         self.handler_method: str = ""
+        self.status : StatusCode = StatusCode.Pending
 
     def to_dict(self):
         return {
             "OperationId": self.operation_id,
             "ApiVersion": self.api_version,
             "Value": [song.to_dict() for song in self.value],
-            "HandlerMethod": self.handler_method
+            "HandlerMethod": self.handler_method,
+            "Status": self.status.name
         }
     
     def from_dataframe(self, df: pd.DataFrame):

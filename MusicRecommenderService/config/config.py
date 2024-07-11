@@ -22,3 +22,9 @@ MUSIC_PLAYCOUNT_FEATURE_COLS = ["danceability", "energy", "loudness", "speechine
 MUSIC_DS_PATH = './data/music_data.csv'
 USER_PLAY_COUNT_PATH = './data/user_playcount_data.csv'
 RECOMMENDED_FEATURE_COLS = ['track_id', 'name', 'artist','spotify_preview_url', 'genre', 'year' ,'duration_ms']
+
+# redis
+REDIS_HOST = 'localhost'
+REDIS_HOST_DOCKER = 'aiorchestra-redis'
+REDIS_PORT = 6379
+REDIS_PASSWORD = 'AIOrchestra123'

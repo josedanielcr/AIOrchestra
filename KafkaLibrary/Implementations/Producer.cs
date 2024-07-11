@@ -2,6 +2,7 @@
 using CommonLibrary;
 using Confluent.Kafka;
 using KafkaLibrary.Interfaces;
+using Newtonsoft.Json.Linq;
 using SharedLibrary;
 using System.Diagnostics;
 
@@ -66,7 +67,7 @@ namespace KafkaLibrary.Implementations
                 (bool conditionMet, BaseResponse result) = await conditionChecker(operationId);
                 if (conditionMet)
                 {
-                    return result;
+                    return ManageTopicResult(result);
                 }
 
                 // Delay to prevent busy-waiting
@@ -80,8 +81,50 @@ namespace KafkaLibrary.Implementations
         {
             var result = await cacheUtils.Get<BaseResponse>(operationId);
             if (result == null) return (false, null!);
-            if (result.Status == RequestStatus.Pending) return (true, null!);
+            if (result.Status == RequestStatus.Pending) return (false, null!);
             return (true, result);
+        }
+
+        private BaseResponse ManageTopicResult(BaseResponse result)
+        {
+            if (result.Value == null) return result;
+            if (result.Value is JArray jArray) result.Value = ConvertJArrayToObject(jArray);
+            else if (result.Value is JObject jObject) result.Value = ConvertJObjectToObject(jObject);
+            else result.Value = ConvertJTokenToObject((JToken)result.Value);
+            return result;
+        }
+
+        private object ConvertJArrayToObject(JArray array)
+        {
+            var list = new List<object>();
+            foreach (var item in array)
+            {
+                list.Add(ConvertJTokenToObject(item));
+            }
+            return list;
+        }
+
+        private object ConvertJObjectToObject(JObject obj)
+        {
+            var dictionary = new Dictionary<string, object>();
+            foreach (var property in obj.Properties())
+            {
+                dictionary[property.Name] = ConvertJTokenToObject(property.Value);
+            }
+            return dictionary;
+        }
+
+        private object ConvertJTokenToObject(JToken token)
+        {
+            switch (token.Type)
+            {
+                case JTokenType.Object:
+                    return token.ToObject<Dictionary<string, object>>()!;
+                case JTokenType.Array:
+                    return token.ToObject<List<object>>()!;
+                default:
+                    return ((JValue)token).Value!;
+            }
         }
     }
 }
