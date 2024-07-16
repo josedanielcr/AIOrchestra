@@ -11,6 +11,7 @@ import { PlaylistService } from '../../../services/playlist.service';
 import { CreatePlaylistReq } from '../../../models/requests/create.playlist.req';
 import { InputComponent } from '../../../components/input/input.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -30,7 +31,8 @@ export class DashboardComponent {
   constructor(private userManagementService : ApiGatewayUserManagementService,
     private musicRecommenderService : MusicRecommenderService,
     private playlistService : PlaylistService,
-    private fb : FormBuilder
+    private fb : FormBuilder,
+    private router : Router
   ) {
     this.recommend = this.recommend.bind(this);
     this.saveToPlaylist = this.saveToPlaylist.bind(this);
@@ -70,6 +72,7 @@ export class DashboardComponent {
       this.songs.map(song => song.track_id));
     this.playlistService.createPlaylist(playlistReq).subscribe(() => {
       this.songs = [];
+      this.router.navigate(['/home/playlists']);
     });
   }
 }

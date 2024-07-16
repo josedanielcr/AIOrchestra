@@ -16,4 +16,8 @@ export class MusicRecommenderService {
   public recommend(preferences : MusicPreferences): Observable<BaseResponse<Song[]>> {
     return this.http.post<BaseResponse<Song[]>>(environment.apiGateway+'/api/songs/recommend', preferences);
   }
+
+  public getSongsById(ids : string[]): Observable<BaseResponse<Song[]>> {
+    return this.http.post<BaseResponse<Song[]>>(environment.apiGateway+'/api/songs/tracks', { trackIds : ids});
+  }
 }

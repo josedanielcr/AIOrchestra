@@ -1,0 +1,11 @@
+@if(playlists.length > 0){
+    <div class="row">
+        <div class="col-md-4 mb-3" *ngFor="let playlist of playlists">
+            <app-playlist-card [playlist]="playlist"></app-playlist-card>
+        </div>
+    </div>
+} @else {
+    <div class="d-flex justify-content-center align-items-center h-100">
+        <h1 class="text-white">No playlists found</h1>
+    </div>
+}

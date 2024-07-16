@@ -1,0 +1,23 @@
+@if(playlist && isOpen){
+    <div class="modal-bg">
+    
+        <!-- modal -->
+         <div class="playlist-viewer-modal-container p-4 d-flex flex-column">
+    
+            <header class="d-flex">
+                <h2 class="flex-grow-1 text-black">
+                    {{playlist.Name}}
+                </h2>
+                <button class="btn btn-close" (click)="closeModal()"></button>
+            </header>
+
+            <main>
+                <div class="row">
+                    <div class="col-md-4 mb-3" *ngFor="let song of playlist.Songs">
+                        <app-music-card [song]="song"></app-music-card>
+                    </div>
+                </div>
+            </main>
+         </div>
+    </div>
+}

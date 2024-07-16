@@ -1,0 +1,13 @@
+<div class="w-100 playlist-card-container gradient-playlist-background p-3 d-flex align-items-center">
+    <!-- playlist info -->
+    <div>
+        <span>{{playlist?.Name}} | {{userManagementService.user()?.Name}}</span> <br>
+        <span class="text-pink">Duration {{this.getPlaylistDuration()}}</span>
+    </div>
+
+    <div class="ms-auto">
+        <i class="fa-solid fa-eye text-white fa-2x cursor-pointer" (click)="viewPlaylist()"></i>
+    </div>
+</div>
+
+<app-playlist-viewer [playlist]="playlist"></app-playlist-viewer>
