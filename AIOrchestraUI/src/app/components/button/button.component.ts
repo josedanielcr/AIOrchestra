@@ -15,6 +15,7 @@ export class ButtonComponent {
   @Input() event: Function = () => {};
   @Input() type: ButtonType = ButtonType.PRIMARY;
   @Input() icon : string = '';
+  public disabled: boolean = false;
 
   constructor() { }
 

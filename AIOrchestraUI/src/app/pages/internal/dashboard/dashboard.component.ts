@@ -12,20 +12,23 @@ import { CreatePlaylistReq } from '../../../models/requests/create.playlist.req'
 import { InputComponent } from '../../../components/input/input.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { SetupComponent } from '../setup/setup.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [ButtonComponent, CommonModule, MusicCardComponent, ReactiveFormsModule, InputComponent],
+  imports: [ButtonComponent, CommonModule, MusicCardComponent, ReactiveFormsModule, InputComponent, SetupComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent {
 
+  @ViewChild('recommendButton') recommendButton!: ButtonComponent;
   public ButtonType = ButtonType;
   public songs : Song[] = [];
   public newPlaylistForm! : FormGroup;
   public btnText : string = 'Click to save your new playlist!';
+  public isSetupOpen : boolean = false;
 
 
   constructor(private userManagementService : ApiGatewayUserManagementService,
@@ -74,5 +77,11 @@ export class DashboardComponent {
       this.songs = [];
       this.router.navigate(['/home/playlists']);
     });
+  }
+
+  toggleSetup() {
+    this.isSetupOpen = !this.isSetupOpen;
+    if(this.isSetupOpen) this.recommendButton.disabled = true;
+    else this.recommendButton.disabled = false;
   }
 }
