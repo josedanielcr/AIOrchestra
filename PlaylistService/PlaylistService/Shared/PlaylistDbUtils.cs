@@ -50,5 +50,13 @@ namespace PlaylistService.Shared
         {
             return await dbContext.Playlists.Where(p => p.UserId == userId).ToListAsync();
         }
+
+        public async Task DeletePlaylistAsync(string playlistId)
+        {
+            var playlist = await dbContext.Playlists.Where(p => p.Id == playlistId).FirstOrDefaultAsync()
+                ?? throw new Exception("Playlist not found");
+            dbContext.Playlists.Remove(playlist);
+            await dbContext.SaveChangesAsync();
+        }
     }
 }

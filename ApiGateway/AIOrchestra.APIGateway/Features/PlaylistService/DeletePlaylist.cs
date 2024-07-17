@@ -1,4 +1,5 @@
-﻿using AIOrchestra.APIGateway.Contracts.PlaylistService.Requests;
+﻿using AIOrchestra.APIGateway.Contracts.PlaylistService;
+using AIOrchestra.APIGateway.Contracts.PlaylistService.Requests;
 using AIOrchestra.APIGateway.Features.PlaylistService;
 using AIOrchestra.APIGateway.Resources;
 using AIOrchestra.APIGateway.Shared;
@@ -8,23 +9,21 @@ using FluentValidation;
 using KafkaLibrary.Interfaces;
 using Mapster;
 using MediatR;
-using Newtonsoft.Json.Linq;
-using System.Text.Json;
 
 namespace AIOrchestra.APIGateway.Features.PlaylistService
 {
-    public static class GetUserPlaylists
+    public static class DeletePlaylist
     {
         public class Command : BaseRequest, IRequest<BaseResponse>
         {
-            public string UserId { get; set; } = string.Empty;
+            public string PlaylistId { get; set; } = string.Empty;
         }
 
         public class Validator : AbstractValidator<Command>
         {
             public Validator()
             {
-                RuleFor(x => x.UserId).NotEmpty();
+                RuleFor(x => x.PlaylistId).NotEmpty();
             }
         }
 
@@ -41,26 +40,26 @@ namespace AIOrchestra.APIGateway.Features.PlaylistService
 
             public async Task<BaseResponse> Handle(Command request, CancellationToken cancellationToken)
             {
-                BaseResponse response = await APIUtils.ExecuteBaseRequest(request, "GetUserPlaylists", producer, validator);
+                BaseResponse response = await APIUtils.ExecuteBaseRequest(request, "DeletePlaylist", producer, validator);
                 return response;
             }
         }
     }
 }
 
-public class GetUserPlaylistEndpont : ICarterModule
+public class DeletePlaylistEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        string endpoint = ServiceEndpoints.PlaylistService_User;
+        string endpoint = ServiceEndpoints.PlaylistService_Delete;
         string endpointPrefix = ServiceEndpoints.EndpointPrefix;
-        app.MapPost(endpointPrefix + endpoint, async (GetUserPlaylistsReq request, ISender sender) =>
+        app.MapPost(endpointPrefix + endpoint, async (DeletePlaylistReq request, ISender sender) =>
         {
             request.TargetTopic = Topics.PlaylistService;
-            var command = request.Adapt<GetUserPlaylists.Command>();
+            var command = request.Adapt<DeletePlaylist.Command>();
             command.Value = new
             {
-                request.UserId
+                request.PlaylistId
             };
             var result = await sender.Send(command);
 
@@ -68,24 +67,7 @@ public class GetUserPlaylistEndpont : ICarterModule
             {
                 return Results.BadRequest(result);
             }
-            addSongIdsToResponse(result);
             return Results.Ok(result);
         }).RequireAuthorization();
-    }
-
-    private void addSongIdsToResponse(BaseResponse result)
-    {
-        var resultVal = (List<object>)result.Value;
-        foreach (var playlist in resultVal)
-        {
-            var playlistDic = (Dictionary<string, object>)playlist;
-            var songIds = (JToken)playlistDic["SongIds"];
-            var songIdsResponse = new List<string>();
-            foreach (var songId in songIds)
-            {
-                songIdsResponse.Add(songId.ToString());
-            }
-            playlistDic["SongIds"] = songIdsResponse;
-        }
     }
 }

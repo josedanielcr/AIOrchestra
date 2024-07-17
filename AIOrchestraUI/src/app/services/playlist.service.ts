@@ -17,4 +17,8 @@ export class PlaylistService {
   public getUserPlaylists(userId : string) {
     return this.http.post(environment.apiGateway+'/api/playlist/user',{userId : userId});
   }
+
+  public deletePlaylist(playlistId : string) {
+    return this.http.post(environment.apiGateway+'/api/playlist/delete',{playlistId : playlistId});
+  }
 }

@@ -8,7 +8,15 @@
                 <h2 class="flex-grow-1 text-black">
                     {{playlist.Name}}
                 </h2>
-                <button class="btn btn-close" (click)="closeModal()"></button>
+                <div class="d-flex align-items-top position-relative user-select-none">
+                    <button class="btn btn-close" (click)="closeModal()"></button>
+                    <i class="fa-solid fa-ellipsis fa-2x ms-2 cursor-pointer" (click)="toggleModalDetail()"></i>
+                    @if(isModalDetailOpen){
+                        <div class="detail-modal d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-trash text-white fa-2x cursor-pointer" (click)="deletePlaylist()"></i>
+                        </div>
+                    }
+                </div>
             </header>
 
             <main>

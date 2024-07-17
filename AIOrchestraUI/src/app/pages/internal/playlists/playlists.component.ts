@@ -17,6 +17,7 @@ import { Song } from '../../../models/song';
 })
 export class PlaylistsComponent implements OnInit {
 
+
   public playlists : Playlist[] = [];
 
   constructor(private playlistService : PlaylistService,
@@ -59,5 +60,9 @@ export class PlaylistsComponent implements OnInit {
         console.log(error);
       }
     });
+  }
+
+  public deletePlaylist($event: string) {
+    this.playlists = this.playlists.filter((playlist : Playlist) => playlist.Id !== $event);
   }
 }

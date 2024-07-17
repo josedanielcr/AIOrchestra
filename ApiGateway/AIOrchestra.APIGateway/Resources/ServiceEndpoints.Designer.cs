@@ -97,6 +97,15 @@ namespace AIOrchestra.APIGateway.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to playlist/delete.
+        /// </summary>
+        public static string PlaylistService_Delete {
+            get {
+                return ResourceManager.GetString("PlaylistService.Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to playlist/user.
         /// </summary>
         public static string PlaylistService_User {

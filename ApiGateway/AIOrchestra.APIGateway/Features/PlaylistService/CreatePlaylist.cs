@@ -1,12 +1,10 @@
 ﻿using AIOrchestra.APIGateway.Contracts.PlaylistService;
-using AIOrchestra.APIGateway.Contracts.UserManagement.Requests;
 using AIOrchestra.APIGateway.Features.PlaylistService;
 using AIOrchestra.APIGateway.Resources;
 using AIOrchestra.APIGateway.Shared;
 using Carter;
 using CommonLibrary;
 using FluentValidation;
-using KafkaLibrary.Implementations;
 using KafkaLibrary.Interfaces;
 using Mapster;
 using MediatR;

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { Playlist } from '../../models/playlist';
 import { CommonModule } from '@angular/common';
 import { ApiGatewayUserManagementService } from '../../services/api-gateway-user-management.service';
@@ -15,6 +15,7 @@ export class PlaylistCardComponent{
 
   @Input() playlist: Playlist | null = null;
   @ViewChild(PlaylistViewerComponent) playlistViewer: PlaylistViewerComponent | null = null;
+  @Output() playlistDeleted = new EventEmitter<string>();
 
   constructor(public userManagementService : ApiGatewayUserManagementService) {}
 
@@ -31,4 +32,9 @@ export class PlaylistCardComponent{
   public viewPlaylist() {
     this.playlistViewer?.open();
   }
+
+  public deletePlaylist() {
+    this.playlistDeleted.emit(this.playlist?.Id as string);
+  }
+    
 }
