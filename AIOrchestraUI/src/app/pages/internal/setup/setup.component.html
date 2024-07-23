@@ -5,51 +5,63 @@
         <hr class="text-white">
         <div class="mt-4">
             <form [formGroup]="form" (ngSubmit)="onSubmit()">
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <app-input [inputValue]="userManagementService.user()?.Name" formControlName="name" label="Name" [type]="InputType.Text"></app-input>
-                    </div>
-                    <div class="col-md-6">
-                        <app-input [inputValue]="userManagementService.user()?.Email" formControlName="email" label="Email" [type]="InputType.Text"></app-input>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <app-input [inputValue]="userManagementService.user()?.Nickname" formControlName="nickname" label="Nickname" [type]="InputType.Text"></app-input>
-                    </div>
-                    <div class="col-md-6">
-                        <app-input formControlName="age" label="Age" [type]="InputType.Number"></app-input>
-                    </div>
-                </div>
-                <div class="mt-5">
-                    <h3>Tell us how you enjoy these music attributes</h3>
-                </div>
-                @if (options.length > 0) {
+                @if(isNewUser){
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <app-search-select formControlName="danceability" [label]="'Danceability'" [options]="options"></app-search-select>
+                            <app-input [inputValue]="userManagementService.user()?.Name" formControlName="name" label="Name" [type]="InputType.Text"></app-input>
                         </div>
                         <div class="col-md-6">
-                            <app-search-select formControlName="energy" [label]="'Energy'" [options]="options"></app-search-select>
+                            <app-input [inputValue]="userManagementService.user()?.Email" formControlName="email" label="Email" [type]="InputType.Text"></app-input>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <app-search-select formControlName="speechiness" [label]="'Speechiness'" [options]="options"></app-search-select>
+                            <app-input [inputValue]="userManagementService.user()?.Nickname" formControlName="nickname" label="Nickname" [type]="InputType.Text"></app-input>
                         </div>
                         <div class="col-md-6">
-                            <app-search-select formControlName="loudness" [label]="'Loudness'" [options]="options"></app-search-select>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <app-search-select formControlName="instrumentalness" [label]="'Instrumentalness'" [options]="options"></app-search-select>
-                        </div>
-                        <div class="col-md-6">
-                            <app-search-select formControlName="liveness" [label]="'Liveness'" [options]="options"></app-search-select>
+                            <app-input formControlName="age" label="Age" [type]="InputType.Number"></app-input>
                         </div>
                     </div>
                 }
+                <div [class.mt-5]="isNewUser">
+                    <h3>Tell us how you enjoy these music attributes</h3>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="w-100 h-100 d-flex flex-column justify-content-center">
+                            <app-slider formControlName="danceability" [label]="'Danceability'" ></app-slider>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="w-100 h-100 d-flex flex-column justify-content-center">
+                            <app-slider formControlName="energy" [label]="'Energy'" ></app-slider>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="w-100 h-100 d-flex flex-column justify-content-center">
+                            <app-slider formControlName="speechiness" [label]="'Speechiness'" ></app-slider>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="w-100 h-100 d-flex flex-column justify-content-center">
+                            <app-slider formControlName="loudness" [label]="'Loudness'" ></app-slider>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="w-100 h-100 d-flex flex-column justify-content-center">
+                            <app-slider formControlName="instrumentalness" [label]="'Instrumentalness'" ></app-slider>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="w-100 h-100 d-flex flex-column justify-content-center">
+                            <app-slider [label]="'Liveness'" formControlName="liveness"></app-slider>
+                        </div>
+                    </div>
+                </div>      
                 <app-button [event]="onSubmit" label="Update information" [type]="buttonType.PRIMARY"></app-button>
             </form>
         </div>

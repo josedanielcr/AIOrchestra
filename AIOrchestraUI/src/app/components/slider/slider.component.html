@@ -1,0 +1,11 @@
+<div class="slider-container">
+    <input 
+      type="range" 
+      min="0" 
+      max="100" 
+      [value]="value" 
+      (input)="onInputChange($event)" 
+      class="slider" 
+      id="customSlider">
+    <p class="m-0 p-0">{{label}}: <span>{{ value }}</span></p>
+  </div>

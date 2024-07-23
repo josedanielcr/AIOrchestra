@@ -84,4 +84,8 @@ export class DashboardComponent {
     if(this.isSetupOpen) this.recommendButton.disabled = true;
     else this.recommendButton.disabled = false;
   }
+
+  closeSetupSection(){
+    this.isSetupOpen = false;
+  }
 }
