@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { ApiGatewayUserManagementService } from '../../../services/api-gateway-user-management.service';
 import { ButtonComponent } from '../../../components/button/button.component';
 import { ButtonType } from '../../../components/button/type.enum';
@@ -13,6 +13,8 @@ import { InputComponent } from '../../../components/input/input.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SetupComponent } from '../setup/setup.component';
+import { BaseResponse } from '../../../models/base.response';
+import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-dashboard',
@@ -29,7 +31,7 @@ export class DashboardComponent {
   public newPlaylistForm! : FormGroup;
   public btnText : string = 'Click to save your new playlist!';
   public isSetupOpen : boolean = false;
-
+  toast = inject(NgToastService);
 
   constructor(private userManagementService : ApiGatewayUserManagementService,
     private musicRecommenderService : MusicRecommenderService,
@@ -54,8 +56,14 @@ export class DashboardComponent {
 
   public recommend() {
     const userMusicPreferences : MusicPreferences = this.createUserMusicPreferences();
-    this.musicRecommenderService.recommend(userMusicPreferences).subscribe((response) => {
-      this.songs = response.value;
+
+    this.musicRecommenderService.recommend(userMusicPreferences).subscribe({
+      next: (response : any) => {
+        this.songs = response.value;
+      },
+      error: () => {
+        this.toast.danger('An error occurred while trying to recommend songs');
+      }
     });
   }
 
@@ -73,9 +81,14 @@ export class DashboardComponent {
     const playlistReq = new CreatePlaylistReq(this.newPlaylistForm.value.playlistName as string,
       this.userManagementService.user()?.Id as string,
       this.songs.map(song => song.track_id));
-    this.playlistService.createPlaylist(playlistReq).subscribe(() => {
-      this.songs = [];
-      this.router.navigate(['/home/playlists']);
+    this.playlistService.createPlaylist(playlistReq).subscribe({
+      next: () => {
+        this.songs = [];
+        this.router.navigate(['/home/playlists']);
+      },
+      error: () => {
+        this.toast.danger('An error occurred while trying to create the playlist');
+      }
     });
   }
 

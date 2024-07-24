@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Playlist } from '../../../models/playlist';
 import { PlaylistService } from '../../../services/playlist.service';
 import { ApiGatewayUserManagementService } from '../../../services/api-gateway-user-management.service';
@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { PlaylistCardComponent } from '../../../components/playlist-card/playlist-card.component';
 import { MusicRecommenderService } from '../../../services/music-recommender.service';
 import { Song } from '../../../models/song';
+import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-playlists',
@@ -17,8 +18,8 @@ import { Song } from '../../../models/song';
 })
 export class PlaylistsComponent implements OnInit {
 
-
   public playlists : Playlist[] = [];
+  toast = inject(NgToastService);
 
   constructor(private playlistService : PlaylistService,
     private userService : ApiGatewayUserManagementService,
@@ -36,7 +37,7 @@ export class PlaylistsComponent implements OnInit {
         this.fillPlaylistSongs(baseResponse.value);
       },
       error : (error : undefined) => {
-        console.log(error);
+        this.toast.danger('An error occurred while fetching your playlists');
       } 
     });
   }
@@ -57,7 +58,7 @@ export class PlaylistsComponent implements OnInit {
         this.playlists.push(playlist);
       },
       error : (error : undefined) => {
-        console.log(error);
+        this.toast.danger('An error occurred while fetching your songs');
       }
     });
   }

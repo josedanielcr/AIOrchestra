@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, inject, Input, input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputComponent } from '../../../components/input/input.component';
 import { Type } from '../../../components/input/input.enum';
@@ -11,6 +11,7 @@ import { Router, RouterModule } from '@angular/router';
 import { SliderComponent } from '../../../components/slider/slider.component';
 import { AppUser } from '../../../models/user';
 import { Subscription } from 'rxjs';
+import { NgToastService } from 'ng-angular-popup';
 @Component({
   selector: 'app-setup',
   standalone: true,
@@ -26,6 +27,7 @@ export class SetupComponent implements OnInit, OnDestroy {
   @Input() isNewUser : boolean = true;
   @Output() onUpdate : EventEmitter<boolean> = new EventEmitter<boolean>();
   private subscriptions : Subscription[] = [];
+  toast = inject(NgToastService);
 
   constructor(private fb: FormBuilder, 
     public userManagementService : ApiGatewayUserManagementService,
@@ -56,9 +58,14 @@ export class SetupComponent implements OnInit, OnDestroy {
     if(this.isNewUser && !this.form.valid) return; 
     else this.updateUserPreferences();
     this.subscriptions.push(
-      this.userManagementService.setupUser(this.form.value).subscribe((response: any) => {
-        this.userManagementService.setUser(response.value);
-        if(!this.isNewUser) this.onUpdate.emit(true);
+      this.userManagementService.setupUser(this.form.value).subscribe({
+        next : (response : any) => {
+          this.userManagementService.setUser(response.value);
+          if(!this.isNewUser) this.onUpdate.emit(true);
+        },
+        error : () => {
+          this.toast.danger('An error occurred while trying to setup your account');
+        }
       })
     );
   }
