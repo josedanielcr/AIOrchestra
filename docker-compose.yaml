@@ -135,13 +135,15 @@ services:
     image: mongodb/mongodb-community-server:7.0.4-ubi8
     container_name: aiorchestra-mongodb-playlist-management
     ports:
-      - "27018:27017"
+      - "27018:27018"
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: AIOrchestra123
     volumes:
       - mongodb_playlist_data:/data/db
       - ./mongo-init-playlists.js:/docker-entrypoint-initdb.d/mongo-init-playlists.js:ro
+      - ./mongod.conf:/etc/mongod.conf:ro
+    command: ["mongod", "--config", "/etc/mongod.conf"]
     networks:
       - ai-orchestra-network 
 
