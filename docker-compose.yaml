@@ -232,6 +232,16 @@ services:
     networks:
       - ai-orchestra-network
 
+  angular-app:
+    build:
+      context: ./AIOrchestraUI
+      dockerfile: Dockerfile
+    container_name: aiorchestra-angular-app
+    ports:
+      - "4200:80"
+    networks:
+      - ai-orchestra-network
+
 volumes:
   mongodb_data:
   mongodb_playlist_data:

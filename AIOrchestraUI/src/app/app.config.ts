@@ -1,5 +1,5 @@
 import { ApplicationConfig } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withHashLocation } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -14,7 +14,7 @@ export const appConfig: ApplicationConfig = {
       withJsonpSupport(),
       withInterceptors([tokenInterceptor])
     ),
-    provideRouter(routes), 
+    provideRouter(routes, withHashLocation()),
     provideAnimationsAsync(),
     provideAuth0({
       domain: 'dev-qcwyqko8w0p3q5ht.us.auth0.com',
