@@ -55,13 +55,17 @@ export class SetupComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    if(this.isNewUser && !this.form.valid) return; 
-    else this.updateUserPreferences();
+    if(this.isNewUser){
+      if(!this.form.valid) return;
+    } else {
+      this.updateUserPreferences();
+    }
     this.subscriptions.push(
       this.userManagementService.setupUser(this.form.value).subscribe({
         next : (response : any) => {
           this.userManagementService.setUser(response.value);
           if(!this.isNewUser) this.onUpdate.emit(true);
+          else this.router.navigate(['/home/dashboard']);
         },
         error : () => {
           this.toast.danger('An error occurred while trying to setup your account');
